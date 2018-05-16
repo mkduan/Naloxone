@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Button } from 'react-native';
 import styles from '../Style/Style.js';
 import SettingButton from '../Components/SettingButton';
 import SettingHeader from '../Components/SettingHeader.js';
@@ -25,37 +25,53 @@ export default class SettingsScreen extends React.Component {
      this.setState({switchValueNoti: value})
      console.log('Notifications is: ' + value);
    }
+
+   _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate('Auth');
+  };
   
-    render() {
-      return (
-        <View style={{ flex: 1}}>
-          <View style = {{ height: 75, backgroundColor: 'rgba(70, 130, 180, 0.8)', justifyContent: 'flex-end'}}>
-            <Text style= {{left: 20, bottom: 10, color: 'white', fontSize: 30}}>
-              Settings
-            </Text>
-          </View>
-          <SettingHeader
-            title = {'General'}
-          />
-          <SettingLine/>
-          <SettingButton
-            title = {'Kit Holder'}
-            toggleSwitch = {this.toggleSwitch}
-            switchValue = {this.state.switchValue}
-            description = {'You regularly have a Naloxone kit on you and is ready to be administered'}
-            blockIcon = {"md-medkit"}
-            iconColor = {"red"}
-          />
-          <SettingButton
-            title = {'Notifications'}
-            toggleSwitch = {this.toggleSwitchNoti}
-            switchValue = {this.state.switchValueNoti}
-            description = {'Reviece notifications when distress calls are issued.'}
-            blockIcon = {"md-notifications"}
-            iconColor = {"skyblue"}
-            isDisabled = {!this.state.switchValue}
+  render() {
+    return (
+      <View style={{ flex: 1}}>
+        <View style = {{ height: 75, backgroundColor: 'rgba(70, 130, 180, 0.8)', justifyContent: 'flex-end'}}>
+          <Text style= {{left: 20, bottom: 10, color: 'white', fontSize: 30}}>
+            Settings
+          </Text>
+        </View>
+        <SettingHeader
+          title = {'General'}
+        />
+        <SettingLine/>
+        <SettingButton
+          title = {'Kit Holder'}
+          toggleSwitch = {this.toggleSwitch}
+          switchValue = {this.state.switchValue}
+          description = {'You regularly have a Naloxone kit on you and is ready to be administered'}
+          blockIcon = {"md-medkit"}
+          iconColor = {"red"}
+        />
+        <SettingButton
+          title = {'Notifications'}
+          toggleSwitch = {this.toggleSwitchNoti}
+          switchValue = {this.state.switchValueNoti}
+          description = {'Reviece notifications when distress calls are issued.'}
+          blockIcon = {"md-notifications"}
+          iconColor = {"skyblue"}
+          isDisabled = {!this.state.switchValue}
+        />
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+        }}>
+          <Button
+            onPress={this._signOutAsync}
+            title="Log Out"
+            color="#841584"
           />
         </View>
-      );
-    }
+      </View>
+    );
   }
+}

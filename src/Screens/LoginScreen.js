@@ -1,18 +1,21 @@
 import React from 'react';
-import { ImageBackground, Dimensions, TouchableHighlight, Text, View, Button } from 'react-native';
+import { ImageBackground, Dimensions, TouchableHighlight, Text, View, AsyncStorage, Button } from 'react-native';
 import styles from '../Style/Style.js';
 import * as firebase from 'firebase';
 import { Ionicons } from '@expo/vector-icons';
 
 import LoginButton from '../Components/LoginButton.js';
+import Tabs from '../Tabs.js';
+import { StackNavigator, SwitchNavigator } from 'react-navigation';
 
 let { width, height } = Dimensions.get('window');
 
-export default class LoginScreen extends React.Component {
+class LoginScreen extends React.Component {
 
-    dummyfunction() {
-        console.log("Dummy");
-    }
+    dummyfunction = async () => {
+        await AsyncStorage.setItem('userToken', 'abc');
+        this.props.navigation.navigate('App');
+      };
 
   render() {
     return (
@@ -83,19 +86,14 @@ export default class LoginScreen extends React.Component {
   }
 }
 
-/*
-<TouchableHighlight
-                    style={{
-                        backgroundColor: "#de1f00",
-                        alignSelf: 'baseline',
-                        padding: 10,
-                    }}
-                    onPress={this.dummyfunction}
-                    underlayColor="#CA1D00"
-                >
-                    <LoginButton
-                        icon = {"logo-google"}
-                        loginText = {"Sign in with Google"}
-                    />
-                </TouchableHighlight>
-*/
+const AppStack = Tabs;
+
+export default SwitchNavigator(
+    {
+      Login: LoginScreen,
+      App: AppStack,
+    },
+    {
+      initialRouteName: 'Login',
+    }
+);
