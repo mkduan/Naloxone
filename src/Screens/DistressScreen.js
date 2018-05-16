@@ -65,7 +65,7 @@ export default class DistressScreen extends React.Component {
           <RNSlidingButton
             style={{
               width: width,
-              backgroundColor: '#ff0000',
+              backgroundColor: '#db2828',
             }}
             height={width / 7}
             onSlidingSuccess={this.storeLocation}

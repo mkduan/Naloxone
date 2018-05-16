@@ -34,7 +34,7 @@ export default class SettingsScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1}}>
-        <View style = {{ height: 75, backgroundColor: 'rgba(70, 130, 180, 0.8)', justifyContent: 'flex-end'}}>
+        <View style = {{ height: 75, backgroundColor: '#1f5fa5', justifyContent: 'flex-end'}}>
           <Text style= {{left: 20, bottom: 10, color: 'white', fontSize: 30}}>
             Settings
           </Text>
@@ -49,7 +49,7 @@ export default class SettingsScreen extends React.Component {
           switchValue = {this.state.switchValue}
           description = {'You regularly have a Naloxone kit on you and is ready to be administered'}
           blockIcon = {"md-medkit"}
-          iconColor = {"red"}
+          iconColor = {"#db2828"}
         />
         <SettingButton
           title = {'Notifications'}
@@ -68,7 +68,7 @@ export default class SettingsScreen extends React.Component {
           <Button
             onPress={this._signOutAsync}
             title="Log Out"
-            color="#841584"
+            color="#db2828"
           />
         </View>
       </View>
