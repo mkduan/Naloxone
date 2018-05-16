@@ -1,29 +1,23 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {Text, TouchableHighlight} from 'react-native';
+import {Text, View} from 'react-native';
 //import styles from '../Style/Style.js';
 import { Ionicons } from '@expo/vector-icons';
 
 class LoginButton extends Component{
     render() {
-        const{login, color, icon, loginText} = this.props;
+        const{icon, loginText} = this.props;
         
         return (
-            <TouchableHighlight
-                style={{
-                    backgroundColor: color,
-                }}
-                onPress={login}
-            >
-                <Text style = {{color: "white", alignItems: 'center', padding: 10}}> {loginText} </Text>
-            </TouchableHighlight>
+            <View style = {{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                <Ionicons name = {icon} size={21} color = "white" style={{marginRight: 5}} />
+                <Text style={{color: "white", fontSize:21}}>{loginText}</Text>
+            </View>
         );
     }
 }
 
 LoginButton.propTypes = {
-    login: PropTypes.func.isRequired,
-    color: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
     loginText: PropTypes.string.isRequired,
 };
