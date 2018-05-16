@@ -25,8 +25,8 @@ export default class DistressScreen extends React.Component {
       position => {
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
-        let testuser = "Mason";
-        firebase.database().ref('users'/+testuser).set({
+        let testuser = 'Mason';
+        firebase.database().ref('users/'+testuser).set({
           lat: lat,
           lng: long
         });

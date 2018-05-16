@@ -35,7 +35,7 @@ export default TabNavigator(
       tabBarComponent: TabBarBottom,
       tabBarPosition: 'bottom',
       tabBarOptions: {
-        activeTintColor: 'steelblue',
+        activeTintColor: '#1f5fa5',
         inactiveTintColor: 'gray',
       },
       animationEnabled: false,

@@ -1,5 +1,6 @@
 import React from 'react';
 import Tabs from './src/Tabs.js';
+import LoginScreen from './src/Screens/LoginScreen.js';
 
 import * as firebase from 'firebase';
 
@@ -18,7 +19,7 @@ firebase.initializeApp(firebaseConfig);
 export default class App extends React.Component {
   render() {
     return (
-      <Tabs/>
+      <LoginScreen/>
     );
   }
 }
