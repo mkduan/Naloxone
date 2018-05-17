@@ -6,6 +6,8 @@ import SettingHeader from '../Components/SettingHeader.js';
 import SettingLine from '../Components/SettingLine.js';
 import MarkerCallout from '../Components/MarkerCallout.js';
 
+import {onSignOut} from '../Auth/fakeAuth.js';
+
 export default class SettingsScreen extends React.Component {
 
     constructor() {
@@ -61,7 +63,7 @@ export default class SettingsScreen extends React.Component {
           justifyContent: 'flex-end',
         }}>
           <Button
-            onPress={() => this.props.navigation.navigate('LoginScreen')}
+            onPress={() => onSignOut().then(() => this.props.navigation.navigate('LoginScreen'))}
             title="Log Out"
             color="#db2828"
           />
