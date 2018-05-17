@@ -61,7 +61,7 @@ export default class SettingsScreen extends React.Component {
           justifyContent: 'flex-end',
         }}>
           <Button
-            onPress={() => this.props.navigation.navigate('SignedOut')}
+            onPress={() => this.props.navigation.navigate('LoginScreen')}
             title="Log Out"
             color="#db2828"
           />

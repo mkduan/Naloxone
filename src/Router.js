@@ -9,10 +9,6 @@ import {
 import Tabs from './Tabs.js';
 import LoginScreen from "./Screens/LoginScreen.js";
 
-const headerStyle = {
-  marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-};
-
 export const SignedIn = Tabs;
 
 export const createRootNavigator = (signedIn = false) => {
@@ -21,12 +17,10 @@ export const createRootNavigator = (signedIn = false) => {
       SignedIn: {
         screen: SignedIn
       },
-      SignedOut: {
-        screen: LoginScreen
-      }
+      LoginScreen
     },
     {
-      initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+      initialRouteName: signedIn ? "SignedIn" : "LoginScreen"
     }
   );
 };
