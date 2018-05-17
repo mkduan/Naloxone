@@ -1,40 +1,44 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  AsyncStorage,
-  Button,
   StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
-import { StackNavigator, SwitchNavigator } from 'react-navigation';
+import {isSignedIn} from './Auth/fakeAuth.js';
+import {createRootNavigator} from './Router.js';
 
-import LoginScreen from './Screens/LoginScreen.js';
-import Tabs from './Tabs.js';
+export default class Main extends React.Component {
+  constructor(props) {
+    super(props);
 
-class AuthLoadingScreen extends React.Component {
-  constructor() {
-    super();
-    this._bootstrapAsync();
+    this.state = {
+      signedIn: false,
+      checkedSignIn: false
+    };
   }
 
-  // Fetch the token from storage then navigate to our appropriate place
-  _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
+  componentDidMount() {
+    isSignedIn()
+      .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
+      .catch(err => alert("An error occurred"));
+  }
 
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
-  };
-
-  // Render any loading content that you like here
   render() {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
-      </View>
-    );
+    const { checkedSignIn, signedIn } = this.state;
+
+    // If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
+    if (!checkedSignIn) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+          <StatusBar barStyle="default" />
+        </View>
+      );
+    }
+
+    const Layout = createRootNavigator(signedIn);
+    return <Layout />;
   }
 }
 
@@ -45,17 +49,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-const AppStack = StackNavigator({ Home: Tabs});
-const AuthStack = StackNavigator({ SignIn: LoginScreen });
-
-export default SwitchNavigator(
-  {
-    AuthLoading: AuthLoadingScreen,
-    App: AppStack,
-    Auth: AuthStack,
-  },
-  {
-    initialRouteName: 'AuthLoading',
-  }
-);

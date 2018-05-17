@@ -8,6 +8,14 @@ Naloxone is a cross platform application made to combat the opioid crisis. The i
 
 ## Features ##
 
+### Login Authentication (in progress) ###
+Login Authentication that includes Google, Facebook Authentication, and Email sign up. Coming soon!
+
+<p align="center">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/login.gif">
+</p>
+
+
 ### Map ###
 The map in the application shows the user as well as pharmacies and hospitals within a two kilometer radius. When the user taps on a pharmacy or a hospital icon, the location's information will appear above the location. When the user taps on the location's details, a map application on the device will pop up with directions to the pharmacy/hospital from the user's location.
 

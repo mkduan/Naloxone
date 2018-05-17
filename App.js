@@ -1,6 +1,4 @@
-import React from 'react';
-import Tabs from './src/Tabs.js';
-import LoginScreen from './src/Screens/LoginScreen.js';
+import Main from './src/Main.js';
 
 import * as firebase from 'firebase';
 
@@ -16,10 +14,4 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <LoginScreen/>
-    );
-  }
-}
+export default Main;

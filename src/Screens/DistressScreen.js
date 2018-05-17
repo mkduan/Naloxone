@@ -8,17 +8,6 @@ let { width, height } = Dimensions.get('window');
 
 export default class DistressScreen extends React.Component {
 
-  /*distressCall() {
-    Alert.alert(
-        'Distress Call',
-        'Distress sent out to nearby Naloxone Kit holders, wait for a response.',
-        [
-            {text: 'OK', onPress:() => console.log('OK Pressed')},
-        ],
-        { cancelable: false }
-    )
-  }*/
-
   storeLocation() {
     console.log("Storing location");
     navigator.geolocation.getCurrentPosition(
