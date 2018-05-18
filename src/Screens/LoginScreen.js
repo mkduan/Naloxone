@@ -7,9 +7,39 @@ import { Ionicons } from '@expo/vector-icons';
 import LoginButton from '../Components/LoginButton.js';
 import {onSignIn} from '../Auth/fakeAuth.js';
 
+import Expo from 'expo';
+
 let { width, height } = Dimensions.get('window');
 
 export default class LoginScreen extends React.Component {
+
+    async signInWithGoogleAsync() {
+        try {
+          const result = await Expo.Google.logInAsync({
+            androidClientId:"YOUR_ANDROID_CLIENT_ID",
+            iosClientId:"YOUR_iOS_CLIENT_ID",
+            scopes: ["profile", "email"]
+          });
+      
+          if (result.type === "success") {
+            const { idToken, accessToken } = result;
+            const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+            firebase
+              .auth()
+              .signInAndRetrieveDataWithCredential(credential)
+              .then(res => {
+                console.log(res);
+              })
+              .catch(error => {
+                console.log("firebase cred err:", error);
+              });
+          } else {
+            return { cancelled: true };
+          }
+        } catch (err) {
+          console.log("err:", err);
+        }
+      };
 
   render() {
     return (
@@ -50,9 +80,7 @@ export default class LoginScreen extends React.Component {
                             width: width*(8/10),
                             padding: 10,
                         }}
-                        onPress={() => {
-                            onSignIn().then(() => this.props.navigation.navigate("SignedIn"));
-                          }}
+                        onPress={this.signInWithGoogleAsync}
                         underlayColor="#CA1D00"
                     >
                         <LoginButton
