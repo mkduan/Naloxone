@@ -16,8 +16,8 @@ export default class LoginScreen extends React.Component {
     async signInWithGoogleAsync() {
         try {
           const result = await Expo.Google.logInAsync({
-            androidClientId:"YOUR_ANDROID_CLIENT_ID",
-            iosClientId:"YOUR_iOS_CLIENT_ID",
+            androidClientId:"292546835523-2f2bmc0s6deicejjnhm388o115qrs83g.apps.googleusercontent.com",
+            iosClientId:"292546835523-k57f7duv05sofagt4luglb57uia9fe89.apps.googleusercontent.com",
             scopes: ["profile", "email"]
           });
       
@@ -28,7 +28,7 @@ export default class LoginScreen extends React.Component {
               .auth()
               .signInAndRetrieveDataWithCredential(credential)
               .then(res => {
-                console.log(res);
+                onSignIn();
               })
               .catch(error => {
                 console.log("firebase cred err:", error);
@@ -80,7 +80,9 @@ export default class LoginScreen extends React.Component {
                             width: width*(8/10),
                             padding: 10,
                         }}
-                        onPress={this.signInWithGoogleAsync}
+                        onPress={() => {
+                            this.signInWithGoogleAsync().then(() => this.props.navigation.navigate("SignedIn"));
+                          }}
                         underlayColor="#CA1D00"
                     >
                         <LoginButton
