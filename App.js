@@ -1,15 +1,14 @@
 import Main from './src/Main.js';
 
 import * as firebase from 'firebase';
+import {API_KEY, AUTH_DOMAIN, DATABASE_URL, STORAGE_BUCKET} from 'react-native-dotenv';
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDcllFt1AGWc2c1MIvA8mvR1voeSkTbn-Q",
-  authDomain: "naloxone-b5562.firebaseapp.com",
-  databaseURL: "https://naloxone-b5562.firebaseio.com",
-  //projectId: "naloxone-b5562",
-  storageBucket: "naloxone-b5562.appspot.com",
-  //messagingSenderId: "292546835523"
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  storageBucket: STORAGE_BUCKET,
 };
 
 firebase.initializeApp(firebaseConfig);

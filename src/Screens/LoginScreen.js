@@ -8,6 +8,8 @@ import LoginButton from '../Components/LoginButton.js';
 import {onSignIn} from '../Auth/fakeAuth.js';
 import {storeUserID} from '../Auth/fakeAuth.js';
 
+import {ANDROID_CLIENT_ID, IOS_CLIENT_ID} from 'react-native-dotenv';
+
 import Expo from 'expo';
 
 let { width, height } = Dimensions.get('window');
@@ -17,8 +19,8 @@ export default class LoginScreen extends React.Component {
     async signInWithGoogleAsync() {
         try {
           const result = await Expo.Google.logInAsync({
-            androidClientId:"292546835523-2f2bmc0s6deicejjnhm388o115qrs83g.apps.googleusercontent.com",
-            iosClientId:"292546835523-k57f7duv05sofagt4luglb57uia9fe89.apps.googleusercontent.com",
+            androidClientId:ANDROID_CLIENT_ID,
+            iosClientId:IOS_CLIENT_ID,
             scopes: ["profile", "email"]
           });
       

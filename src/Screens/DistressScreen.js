@@ -3,7 +3,7 @@ import { Alert, Dimensions, Text, View } from 'react-native';
 import styles from '../Style/Style.js';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button'; 
 import * as firebase from 'firebase';
-import {storeLatLng} from '../Auth/fakeAuth.js';
+import {storeLatLng} from '../Networking/storeLatLng.js';
 
 let { width, height } = Dimensions.get('window');
 
