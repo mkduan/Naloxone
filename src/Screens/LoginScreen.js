@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LoginButton from '../Components/LoginButton.js';
 import {onSignIn} from '../Auth/fakeAuth.js';
 import {storeUserID} from '../Auth/fakeAuth.js';
+import {newUserStoreData, loadPreferences} from '../Networking/firebaseStore.js';
 
 import {ANDROID_CLIENT_ID, IOS_CLIENT_ID} from 'react-native-dotenv';
 
@@ -33,7 +34,11 @@ export default class LoginScreen extends React.Component {
               .then(res => {
                 onSignIn();
                 userid = res.user.uid;
+                if(res.additionalUserInfo.isNewUser) {
+                 newUserStoreData(userid);   
+                }
                 storeUserID(userid);
+                loadPreferences(userid);
               })
               .catch(error => {
                 console.log("firebase cred err:", error);
