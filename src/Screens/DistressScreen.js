@@ -3,6 +3,7 @@ import { Alert, Dimensions, Text, View } from 'react-native';
 import styles from '../Style/Style.js';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button'; 
 import * as firebase from 'firebase';
+import {storeLatLng} from '../Auth/fakeAuth.js';
 
 let { width, height } = Dimensions.get('window');
 
@@ -14,11 +15,18 @@ export default class DistressScreen extends React.Component {
       position => {
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
-        let testuser = 'Mason';
-        firebase.database().ref('users/'+testuser).set({
-          lat: lat,
-          lng: long
-        });
+        storeLatLng()
+        .then(res => {
+          if(res !== null) {
+            firebase.database().ref('users/'+res).set({
+              lat: lat,
+              lng: long
+            });
+          } else {
+            console.log("Can't find user");
+          }
+        })
+        .catch(err => alert("An error occurred"));
       },
       (error) => console.log(error.message),
       { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },

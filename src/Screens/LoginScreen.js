@@ -1,11 +1,12 @@
 import React from 'react';
-import { ImageBackground, Dimensions, TouchableHighlight, Text, View } from 'react-native';
+import { ImageBackground, Dimensions, TouchableHighlight, Text, View, AsyncStorage } from 'react-native';
 import styles from '../Style/Style.js';
 import * as firebase from 'firebase';
 import { Ionicons } from '@expo/vector-icons';
 
 import LoginButton from '../Components/LoginButton.js';
 import {onSignIn} from '../Auth/fakeAuth.js';
+import {storeUserID} from '../Auth/fakeAuth.js';
 
 import Expo from 'expo';
 
@@ -29,6 +30,8 @@ export default class LoginScreen extends React.Component {
               .signInAndRetrieveDataWithCredential(credential)
               .then(res => {
                 onSignIn();
+                userid = res.user.uid;
+                storeUserID(userid);
               })
               .catch(error => {
                 console.log("firebase cred err:", error);
