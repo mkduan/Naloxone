@@ -7,7 +7,7 @@ import SettingLine from '../Components/SettingLine.js';
 import MarkerCallout from '../Components/MarkerCallout.js';
 
 import {onSignOut, getInternalUserInfoBool, getInternalUserInfo} from '../Auth/fakeAuth.js';
-import {loadPreferences} from '../Networking/firebaseStore.js';
+import {loadPreferences, storeLocation} from '../Networking/firebaseStore.js';
 
 export default class SettingsScreen extends React.Component {
 
@@ -22,6 +22,7 @@ export default class SettingsScreen extends React.Component {
     kitHolderSwitch = (value) => {
       this.setState({switchValue: value})
       console.log('Switch is: ' + value);
+      storeLocation(value);
    }
   
    kitHolderNoti = (value) => {
