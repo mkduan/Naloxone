@@ -22,7 +22,6 @@ export const storeLatLng = () => {
     console.log("Welcome new user!");
 }
 
-//TODO: wait till it's done.
 export const loadPreferences = async (userid) => {
   let ref = await firebase.database().ref('users/'+userid+'/kitHolder');
   await ref.once("value", function(snapshot) {

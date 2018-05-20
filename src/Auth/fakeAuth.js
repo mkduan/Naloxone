@@ -21,12 +21,17 @@ export const isSignedIn = () => {
   });
 };
 
-export const storeUserID = (userid) => AsyncStorage.setItem("userID", userid);
+export const storeUserID = (userid) => {
+  console.log("storing userID");
+  AsyncStorage.setItem("userID", userid);
+};
 
-export const getInternalUserInfo = (key) => {
+export const getInternalUserInfoBool = (key) => {
+  console.log("Getting Interal Info Bool");
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem(key)
       .then(res => {
+        console.log("internaluser Bool: "+ res);
         if (res !== null) {
           if(res === 'true'){
             console.log("Not null, res: " + res);
@@ -35,6 +40,26 @@ export const getInternalUserInfo = (key) => {
             console.log("Not null, res: " + res);
             resolve(false);
           }
+        } else {
+          console.log("Null, res: " + res);
+          resolve(res);
+        }
+      })
+      .catch(err => {
+        console.log("Rejected, err: " + err)
+        reject(err)
+      });
+  });
+};
+
+export const getInternalUserInfo = (key) => {
+  console.log("Getting Interal Info");
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem(key)
+      .then(res => {
+        console.log("internaluser: "+ res);
+        if (res !== null) {
+          resolve(res);
         } else {
           console.log("Null, res: " + res);
           resolve(res);

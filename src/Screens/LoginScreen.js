@@ -52,7 +52,6 @@ export default class LoginScreen extends React.Component {
               });
             onSignIn();
             userid = firebaseRes.user.uid;
-            loadPreferences(userid);
             if(firebaseRes.additionalUserInfo.isNewUser) {
                 newUserStoreData(userid);   
             }

@@ -6,7 +6,8 @@ import SettingHeader from '../Components/SettingHeader.js';
 import SettingLine from '../Components/SettingLine.js';
 import MarkerCallout from '../Components/MarkerCallout.js';
 
-import {onSignOut, getInternalUserInfo} from '../Auth/fakeAuth.js';
+import {onSignOut, getInternalUserInfoBool, getInternalUserInfo} from '../Auth/fakeAuth.js';
+import {loadPreferences} from '../Networking/firebaseStore.js';
 
 export default class SettingsScreen extends React.Component {
 
@@ -18,25 +19,33 @@ export default class SettingsScreen extends React.Component {
       }
    }
   
-    toggleSwitch = (value) => {
+    kitHolderSwitch = (value) => {
       this.setState({switchValue: value})
       console.log('Switch is: ' + value);
    }
   
-   toggleSwitchNoti = (value) => {
+   kitHolderNoti = (value) => {
      this.setState({switchValueNoti: value})
      console.log('Notifications is: ' + value);
    }
 
    componentDidMount() {
-    getInternalUserInfo('kitHolder')
+    getInternalUserInfo('userID')
       .then(res => {
-        console.log("setting res: " + res);
-        if(res !== null) {
-          this.setState({ switchValue: res})
-        }
+        loadPreferences(res)
+          .then(() => {
+            getInternalUserInfoBool('kitHolder')
+              .then(res => {
+                console.log("setting res: " + res);
+                if(res !== null) {
+                  this.setState({ switchValue: res})
+                }
+              })
+              .catch(err => alert("An error occurred"));
+          })
+          .catch (err => console.log("error in loading settings value"));
       })
-      .catch(err => alert("An error occurred"));
+      .catch(err => console.log("Error gettings Settings info"));
   }
   
   render() {
@@ -53,7 +62,7 @@ export default class SettingsScreen extends React.Component {
         <SettingLine/>
         <SettingButton
           title = {'Kit Holder'}
-          toggleSwitch = {this.toggleSwitch}
+          toggleSwitch = {this.kitHolderSwitch}
           switchValue = {this.state.switchValue}
           description = {'You regularly have a Naloxone kit on you and is ready to be administered'}
           blockIcon = {"md-medkit"}
@@ -61,7 +70,7 @@ export default class SettingsScreen extends React.Component {
         />
         <SettingButton
           title = {'Notifications'}
-          toggleSwitch = {this.toggleSwitchNoti}
+          toggleSwitch = {this.kitHolderNoti}
           switchValue = {this.state.switchValueNoti}
           description = {'Reviece notifications when distress calls are issued.'}
           blockIcon = {"md-notifications"}
