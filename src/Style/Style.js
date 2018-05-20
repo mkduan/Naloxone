@@ -86,6 +86,11 @@ var styles = StyleSheet.create({
       height: 40,
       fontSize: 15,
       fontWeight: 'normal',
-    }
+    },
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
 });
 export default styles;

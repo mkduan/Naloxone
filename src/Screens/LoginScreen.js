@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, Dimensions, TouchableHighlight, Text, View, AsyncStorage } from 'react-native';
+import { ImageBackground, Dimensions, TouchableHighlight, Text, View, AsyncStorage, ActivityIndicator, StatusBar } from 'react-native';
 import styles from '../Style/Style.js';
 import * as firebase from 'firebase';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,9 +22,14 @@ export default class LoginScreen extends React.Component {
     
         this.state = {
           successfulAuth: false,
+          screenLoading: false,
         };
       }
     async signInWithGoogleAsync() {
+        this.setState({
+            screenLoading: true,
+        })
+        console.log("loading screen...");
         try {
           const result = await Expo.Google.logInAsync({
             androidClientId:ANDROID_CLIENT_ID,
@@ -62,6 +67,15 @@ export default class LoginScreen extends React.Component {
       };
 
   render() {
+    if (this.state.screenLoading){
+        return(
+            <View style={styles.container}>
+                <ActivityIndicator />
+                <StatusBar barStyle="default" />
+            </View>
+        );
+    }
+
     return (
         <ImageBackground
             source={require('../img/naloxonewelcome.jpg')}
@@ -125,7 +139,12 @@ export default class LoginScreen extends React.Component {
                             marginTop: 10,
                         }}
                         onPress={() => {
-                            onSignIn().then(() => this.props.navigation.navigate("SignedIn"));
+                            onSignIn().then(() => {
+                                this.props.navigation.navigate("SignedIn");
+                                this.setState({
+                                    screenLoading: false,
+                                });
+                            });
                           }}
                         underlayColor="#34508C"
                     >

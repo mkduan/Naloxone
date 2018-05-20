@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {isSignedIn} from './Auth/fakeAuth.js';
 import {createRootNavigator} from './Router.js';
+import styles from './Style/Style.js';
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -41,11 +42,3 @@ export default class Main extends React.Component {
     return <Layout />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

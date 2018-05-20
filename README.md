@@ -9,10 +9,10 @@ Naloxone is a cross platform application made to combat the opioid crisis. The i
 ## Features ##
 
 ### Login Authentication (in progress) ###
-Login Authentication that includes Google, Facebook Authentication, and Email sign up. Coming soon!
+Login Authentication that includes Google, Facebook Authentication, and Email sign up. Google Authentication works, the rest is coming soon!
 
 <p align="center">
-  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/login.gif">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/logingoogle.gif">
 </p>
 
 
