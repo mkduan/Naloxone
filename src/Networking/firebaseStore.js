@@ -23,9 +23,9 @@ export const storeLatLng = () => {
 }
 
 //TODO: wait till it's done.
-export const loadPreferences = (userid) => {
-  let ref = firebase.database().ref('users/'+userid+'/kitHolder');
-  ref.on("value", function(snapshot) {
+export const loadPreferences = async (userid) => {
+  let ref = await firebase.database().ref('users/'+userid+'/kitHolder');
+  await ref.once("value", function(snapshot) {
    console.log("loading prefrences: " + snapshot.val());
    let kitValue = snapshot.val();
    kitValue = kitValue.toString();

@@ -17,6 +17,13 @@ let { width, height } = Dimensions.get('window');
 
 export default class LoginScreen extends React.Component {
 
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          successfulAuth: false,
+        };
+      }
     async signInWithGoogleAsync() {
         try {
           const result = await Expo.Google.logInAsync({
@@ -28,22 +35,24 @@ export default class LoginScreen extends React.Component {
           if (result.type === "success") {
             const { idToken, accessToken } = result;
             const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-            firebase
+            this.setState({
+                successfulAuth: true,
+            });
+            //This is the problem
+            const firebaseRes = await firebase
               .auth()
               .signInAndRetrieveDataWithCredential(credential)
-              .then(res => {
-                onSignIn();
-                userid = res.user.uid;
-                loadPreferences(userid);
-                if(res.additionalUserInfo.isNewUser) {
-                 newUserStoreData(userid);   
-                }
-                console.log(userid);
-                storeUserID(userid);
-              })
               .catch(error => {
                 console.log("firebase cred err:", error);
               });
+            onSignIn();
+            userid = firebaseRes.user.uid;
+            loadPreferences(userid);
+            if(firebaseRes.additionalUserInfo.isNewUser) {
+                newUserStoreData(userid);   
+            }
+            console.log(userid);
+            storeUserID(userid);
           } else {
             return { cancelled: true };
           }
@@ -92,7 +101,14 @@ export default class LoginScreen extends React.Component {
                             padding: 10,
                         }}
                         onPress={() => {
-                            this.signInWithGoogleAsync().then(() => this.props.navigation.navigate("SignedIn"));
+                            this.signInWithGoogleAsync().then(() => {
+                                if(this.state.successfulAuth === true) {
+                                    console.log("auth successful");
+                                    this.props.navigation.navigate("SignedIn");
+                                } else {
+                                    console.log("failed auth");
+                                }
+                            });
                           }}
                         underlayColor="#CA1D00"
                     >
