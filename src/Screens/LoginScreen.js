@@ -34,11 +34,12 @@ export default class LoginScreen extends React.Component {
               .then(res => {
                 onSignIn();
                 userid = res.user.uid;
+                loadPreferences(userid);
                 if(res.additionalUserInfo.isNewUser) {
                  newUserStoreData(userid);   
                 }
+                console.log(userid);
                 storeUserID(userid);
-                loadPreferences(userid);
               })
               .catch(error => {
                 console.log("firebase cred err:", error);

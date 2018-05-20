@@ -4,6 +4,7 @@ import styles from '../Style/Style.js';
 import { RNSlidingButton, SlideDirection } from 'rn-sliding-button'; 
 import * as firebase from 'firebase';
 import {storeLatLng} from '../Networking/firebaseStore.js';
+import {getInternalUserInfo} from '../Auth/fakeAuth.js';
 
 let { width, height } = Dimensions.get('window');
 
@@ -18,6 +19,11 @@ export default class DistressScreen extends React.Component {
       ],
       { cancelable: false }
     );
+    getInternalUserInfo('kitHolder')
+      .then(res => {
+        console.log("setting res: " + res);
+      })
+      .catch(err => alert("An error occurred"));
   }
 
   render() {

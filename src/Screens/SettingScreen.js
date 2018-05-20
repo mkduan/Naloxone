@@ -6,7 +6,7 @@ import SettingHeader from '../Components/SettingHeader.js';
 import SettingLine from '../Components/SettingLine.js';
 import MarkerCallout from '../Components/MarkerCallout.js';
 
-import {onSignOut} from '../Auth/fakeAuth.js';
+import {onSignOut, getInternalUserInfo} from '../Auth/fakeAuth.js';
 
 export default class SettingsScreen extends React.Component {
 
@@ -27,6 +27,17 @@ export default class SettingsScreen extends React.Component {
      this.setState({switchValueNoti: value})
      console.log('Notifications is: ' + value);
    }
+
+   componentDidMount() {
+    getInternalUserInfo('kitHolder')
+      .then(res => {
+        console.log("setting res: " + res);
+        if(res !== null) {
+          this.setState({ switchValue: res})
+        }
+      })
+      .catch(err => alert("An error occurred"));
+  }
   
   render() {
     return (

@@ -28,8 +28,13 @@ export const getInternalUserInfo = (key) => {
     AsyncStorage.getItem(key)
       .then(res => {
         if (res !== null) {
-          console.log("Not null, res: " + res);
-          resolve(res);
+          if(res === 'true'){
+            console.log("Not null, res: " + res);
+            resolve(true);
+          } else if (res === 'false'){
+            console.log("Not null, res: " + res);
+            resolve(false);
+          }
         } else {
           console.log("Null, res: " + res);
           resolve(res);
