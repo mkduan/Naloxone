@@ -25,6 +25,18 @@ export const loadPreferences = async (userid) => {
   });
 };
 
+//Rounds to the nearest 0.02 and groups it by increments 0.02.
+/*The whole point is to categorize kit holders by latlng, and 
+then when there is a distress call, a function will explore
+the latlng categories around them. */
+latlngClassifier = (lat, lng) => {
+  console.log("latlngClassifier starting..");
+  lat = lat.toString();
+  let latSplit = lat.split(".");
+  latDec = latSplit[1];
+  console.log(latSplit);
+};
+
 export const storeLocation = (kit) => {
   console.log("Storing location");
   navigator.geolocation.getCurrentPosition(
@@ -35,6 +47,7 @@ export const storeLocation = (kit) => {
       .then(res => {
         if(res !== null) {
           if(kit === true){
+            latlngClassifier(lat, long);
             console.log("storing latlng");
             firebase.database().ref('users/'+res).set({
               kitHolder: kit,

@@ -60,7 +60,7 @@ export default class MapScreen extends React.Component {
         let lat = this.state.region.latitude;
         let long = this.state.region.longitude;
         //TODO: Maybe change the raduis dynamically?
-        let url = URLBuild(lat, long);
+        let url = URLBuild(lat, long, "pharamcy");
         console.log(url);
         return fetch(url)
           .then((response) => response.json())
