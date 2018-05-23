@@ -60,16 +60,30 @@ export default class MapScreen extends React.Component {
         let lat = this.state.region.latitude;
         let long = this.state.region.longitude;
         //TODO: Maybe change the raduis dynamically?
-        let url = URLBuild(lat, long, "pharamcy");
+        let url = URLBuild(lat, long, "pharmacy");
+        let otherUrl = URLBuild(lat,long, "hospital");
+        console.log("pharmacy url: " + url);
+        console.log("hospital url: " + otherUrl);
         console.log(url);
         return fetch(url)
           .then((response) => response.json())
           .then((responseJson) => {
             this.setState({
-              isLoading: false,
               dataSource: responseJson.results,
             }, function () {
             });
+            fetch(otherUrl)
+              .then((response) => response.json())
+              .then((responseJson) => {
+                this.setState({
+                  isLoading: false,
+                  otherDataSource: responseJson.results,
+                }, function () {
+                });
+              })
+              .catch((error) => {
+                console.error(error);
+              });
           })
           .catch((error) => {
             console.error(error);
@@ -109,6 +123,32 @@ export default class MapScreen extends React.Component {
           coordinate={this.state.region}
         />
         {this.state.dataSource.map(marker => (
+          <MapView.Marker
+            coordinate={{
+              latitude: marker.geometry.location.lat,
+              longitude: marker.geometry.location.lng,
+            }}//TODO:: Callout customize the dialog
+            key={marker.id}
+            title={marker.name}
+            description={marker.vicinity}
+            image={marker.icon}
+            onCalloutPress={() => {
+              openGps(marker.geometry.location.lat, marker.geometry.location.lng);
+            }}
+          >
+            <MapView.Callout width={140} height={70} >
+              <TouchableHighlight
+                underlayColor="transparent"
+              >
+                <MarkerCallout
+                  title = {marker.name}
+                  address = {marker.vicinity}
+                />
+              </TouchableHighlight>
+            </MapView.Callout>
+          </MapView.Marker>
+        ))}
+        {this.state.otherDataSource.map(marker => (
           <MapView.Marker
             coordinate={{
               latitude: marker.geometry.location.lat,
