@@ -11,7 +11,7 @@ import {newUserStoreData, loadPreferences} from '../Networking/firebaseStore.js'
 
 import {ANDROID_CLIENT_ID, IOS_CLIENT_ID} from 'react-native-dotenv';
 
-import Expo from 'expo';
+import {Permissions, Notifications} from 'expo';
 
 let { width, height } = Dimensions.get('window');
 
@@ -25,7 +25,35 @@ export default class LoginScreen extends React.Component {
           screenLoading: false,
         };
       }
-    async signInWithGoogleAsync() {
+
+    registerForPushNotificationsAsync = async (userid) => {
+        const { status: existingStatus } = await Permissions.getAsync(
+            Permissions.NOTIFICATIONS
+        );
+        let finalStatus = existingStatus;
+    
+        // only ask if permissions have not already been determined, because
+        // iOS won't necessarily prompt the user a second time.
+        if (existingStatus !== 'granted') {
+        // Android remote notification permissions are granted during the app
+        // install, so this will only ask on iOS
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+        }
+        
+        // Stop here if the user did not grant permissions
+        if (finalStatus !== 'granted') {
+        return;
+        }
+
+        let token = await Notifications.getExpoPushTokenAsync();
+        console.log("notiToken: " + token);
+        firebase.database().ref('users/'+userid).update({
+            expoToken: token,
+        });
+    };
+
+    signInWithGoogleAsync = async () => {
         this.setState({
             screenLoading: true,
         })
@@ -57,6 +85,7 @@ export default class LoginScreen extends React.Component {
             }
             console.log(userid);
             storeUserID(userid);
+            this.registerForPushNotificationsAsync(userid);
           } else {
             return { cancelled: true };
           }
