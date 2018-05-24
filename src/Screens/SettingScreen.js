@@ -38,15 +38,24 @@ export default class SettingsScreen extends React.Component {
           .then(() => {
             getInternalUserInfoBool('kitHolder')
               .then(res => {
-                console.log("setting res: " + res);
+                console.log("kit setting res: " + res);
                 if(res !== null) {
                   this.setState({ switchValue: res});
                 }
-                this.setState({
-                  screenLoading: false,
-                });
               })
-              .catch(err => console.log("An error occurred: " + err));
+              .catch(err => console.log("An error occurred getting KitHolder: " + err));
+
+              getInternalUserInfoBool('kitNoti')
+                .then(res => {
+                  console.log("noti setting res: " + res);
+                  if(res !== null) {
+                    this.setState({ switchValueNoti: res});
+                  }
+                  this.setState({
+                    screenLoading: false,
+                  });
+                })
+                .catch(err => console.log("An error occurred getting KitNoti: " + err));
           })
           .catch (err => console.log("error in loading settings value"));
       })

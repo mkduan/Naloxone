@@ -5,6 +5,7 @@ import {getInternalUserInfo} from '../Auth/fakeAuth.js';
 export const newUserStoreData = (userid) => {
   firebase.database().ref('users/'+userid).set({
     kitHolder: false,
+    kitNoti: false,
   });
   console.log("Welcome new user!");
 };
@@ -12,14 +13,38 @@ export const newUserStoreData = (userid) => {
 export const loadPreferences = async (userid) => {
   let ref = await firebase.database().ref('users/'+userid+'/kitHolder');
   await ref.once("value", function(snapshot) {
-   console.log("loading prefrences: " + snapshot.val());
+   console.log("loading kit prefrences: " + snapshot.val());
    let kitValue = snapshot.val();
    if(kitValue !== null) {
     kitValue = kitValue.toString();
    } else {
-     kitValue = false;
+     kitValue = 'false';
+     firebase.database().ref('users/'+userid).update({
+      kitHolder: false,
+    });
+    console.log("Missing kitHolder value in database, fixed");
    }
+   console.log("storing kitHolder");
    AsyncStorage.setItem("kitHolder", kitValue);
+  }, function (error) {
+   console.log("Error: " + error.code);
+  });
+
+  let notiRef = await firebase.database().ref('users/'+userid+'/kitNoti');
+  await notiRef.once("value", function(snapshot) {
+   console.log("loading kit noti prefrences: " + snapshot.val());
+   let NotiValue = snapshot.val();
+   if(NotiValue !== null) {
+    NotiValue = NotiValue.toString();
+   } else {
+     NotiValue = 'false';
+     firebase.database().ref('users/'+userid).update({
+      kitNoti: false,
+    });
+    console.log("Missing kitNoti value in database, fixed");
+   }
+   console.log("storing kit noti");
+   AsyncStorage.setItem("kitNoti", NotiValue);
   }, function (error) {
    console.log("Error: " + error.code);
   });
