@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableHighlight, Dimensions, ActivityIndicator, View } from 'react-native';
+import { TouchableHighlight, Dimensions, ActivityIndicator, View, StatusBar } from 'react-native';
 import { MapView } from 'expo';
 import { Circle } from 'react-native-maps';
 import RetroMapStyles from '../Style/RetroMapStyles.json';
@@ -96,13 +96,12 @@ export default class MapScreen extends React.Component {
 
   render() {
     if (this.state.isLoading) {
-      return (
-        <MapView
-          style={{ flex: 1 }}
-          customMapStyle={RetroMapStyles}
-          region={this.state.region}
-        />
-      )
+      return(
+        <View style={styles.container}>
+            <ActivityIndicator />
+            <StatusBar barStyle="default" />
+        </View>
+      );
     }
 
     return (

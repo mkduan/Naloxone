@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, ActivityIndicator, StatusBar } from 'react-native';
 import styles from '../Style/Style.js';
 import SettingButton from '../Components/SettingButton';
 import SettingHeader from '../Components/SettingHeader.js';
@@ -16,6 +16,7 @@ export default class SettingsScreen extends React.Component {
       this.state = {
          switchValue: false,
          switchValueNoti: false,
+         screenLoading: true,
       }
    }
   
@@ -39,10 +40,13 @@ export default class SettingsScreen extends React.Component {
               .then(res => {
                 console.log("setting res: " + res);
                 if(res !== null) {
-                  this.setState({ switchValue: res})
+                  this.setState({ switchValue: res});
                 }
+                this.setState({
+                  screenLoading: false,
+                });
               })
-              .catch(err => alert("An error occurred"));
+              .catch(err => console.log("An error occurred: " + err));
           })
           .catch (err => console.log("error in loading settings value"));
       })
@@ -50,6 +54,15 @@ export default class SettingsScreen extends React.Component {
   }
   
   render() {
+    if (this.state.screenLoading){
+      return(
+          <View style={styles.container}>
+              <ActivityIndicator />
+              <StatusBar barStyle="default" />
+          </View>
+      );
+    }
+
     return (
       <View style={{ flex: 1}}>
         <View style = {{ height: 75, backgroundColor: '#1f5fa5', justifyContent: 'flex-end'}}>

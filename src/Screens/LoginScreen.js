@@ -120,6 +120,9 @@ export default class LoginScreen extends React.Component {
                                     this.props.navigation.navigate("SignedIn");
                                 } else {
                                     console.log("failed auth");
+                                    this.setState({
+                                        screenLoading: false,
+                                    });
                                 }
                             });
                           }}
