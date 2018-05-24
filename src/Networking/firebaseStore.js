@@ -82,7 +82,7 @@ latlngClassifier = (lat, lng) => {
   return [latlng, latlngPath];
 };
 
-export const storeLocation = (kit) => {
+export const storeLocation = (kit, kitnoti) => {
   console.log("Storing location");
   navigator.geolocation.getCurrentPosition(
     position => {
@@ -99,31 +99,61 @@ export const storeLocation = (kit) => {
             console.log("storing latlng");
             firebase.database().ref('users/'+res).set({
               kitHolder: kit,
+              kitNoti: kitnoti,
               lat: lat,
               lng: long,
               latlng: mylatlng,
             });
             console.log("lat lng path: " + latlngPath);
-            firebase.database().ref('latlng/'+latlngPath).set({
-              [res]: false,
+            firebase.database().ref('latlng/'+latlngPath).update({
+              [res]: kitnoti,
             });
+            AsyncStorage.setItem("latlngPath", latlngPath);
             console.log(mylatlng);
           } else {
             console.log("not storing latlng");
             firebase.database().ref('users/'+res).set({
               kitHolder: kit,
+              kitNoti: kitnoti,
             });
-            firebase.database().ref('latlng/'+latlngPath).set({
+            firebase.database().ref('latlng/'+latlngPath).update({
               [res]: null,
             });
+            AsyncStorage.removeItem('latlngPath');
           }
         } else {
           console.log("Can't find user");
         }
       })
-      .catch(err => console.log("Can't get internal user? : " + err));
+      .catch(err => console.log("Can't get internal user; store location : " + err));
     },
     (error) => console.log(error.message),
     { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
   );
+};
+
+export const updateLatlng = (kit, kitnoti) => {
+  let userID = null;
+  getInternalUserInfo('userID')
+    .then(res => {
+      userID = res;
+      if(res !== null) {
+        console.log("updating kitNoti");
+          firebase.database().ref('users/'+res).update({
+            kitNoti: kitnoti,
+        });
+      }
+    })
+    .catch(err => console.log("Can't get internal user; updateLatlng: " + err));
+  
+  if(kit === true) {
+    getInternalUserInfo('latlngPath')
+      .then(res => {
+        console.log("updatlatlng; latlngPath: " + res);
+        firebase.database().ref('latlng/'+res).update({
+          [userID]: kitnoti,
+        });
+      })
+      .catch(err => console.log("Can't get interal latlng path: " + err));
+  }
 };
