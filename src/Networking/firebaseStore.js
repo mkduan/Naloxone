@@ -97,7 +97,7 @@ export const storeLocation = (kit, kitnoti) => {
           if(kit === true){
             latlngClassifier(lat, long);
             console.log("storing latlng");
-            firebase.database().ref('users/'+res).set({
+            firebase.database().ref('users/'+res).update({
               kitHolder: kit,
               kitNoti: kitnoti,
               lat: lat,
@@ -112,7 +112,7 @@ export const storeLocation = (kit, kitnoti) => {
             console.log(mylatlng);
           } else {
             console.log("not storing latlng");
-            firebase.database().ref('users/'+res).set({
+            firebase.database().ref('users/'+res).update({
               kitHolder: kit,
               kitNoti: kitnoti,
             });
