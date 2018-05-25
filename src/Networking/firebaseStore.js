@@ -91,6 +91,12 @@ export const storeLocation = (kit, kitnoti) => {
       let latlngArray = latlngClassifier(lat, long);
       let mylatlng = latlngArray[0];
       let latlngPath = latlngArray[1];
+      let expoToken = null;
+      getInternalUserInfo('expoToken')
+      .then(res => {
+        expoToken = res;
+      })
+      .catch(err => console.log("error finding expotoken in internal"));
       getInternalUserInfo('userID')
       .then(res => {
         if(res !== null) {
@@ -103,10 +109,12 @@ export const storeLocation = (kit, kitnoti) => {
               lat: lat,
               lng: long,
               latlng: mylatlng,
+              //Should update expoToken constantly?
             });
             console.log("lat lng path: " + latlngPath);
-            firebase.database().ref('latlng/'+latlngPath).update({
-              [res]: kitnoti,
+            firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
+              kitNoti: kitnoti,
+              expoToken: expoToken,
             });
             AsyncStorage.setItem("latlngPath", latlngPath);
             console.log(mylatlng);
@@ -116,8 +124,9 @@ export const storeLocation = (kit, kitnoti) => {
               kitHolder: kit,
               kitNoti: kitnoti,
             });
-            firebase.database().ref('latlng/'+latlngPath).update({
-              [res]: null,
+            firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
+              kitNoti: null,
+              expoToken: null,
             });
             AsyncStorage.removeItem('latlngPath');
           }
@@ -150,8 +159,8 @@ export const updateLatlng = (kit, kitnoti) => {
     getInternalUserInfo('latlngPath')
       .then(res => {
         console.log("updatlatlng; latlngPath: " + res);
-        firebase.database().ref('latlng/'+res).update({
-          [userID]: kitnoti,
+        firebase.database().ref('latlng/'+res+'/'+userID).update({
+          kitNoti: kitnoti,
         });
       })
       .catch(err => console.log("Can't get interal latlng path: " + err));

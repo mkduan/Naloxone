@@ -47,6 +47,7 @@ export default class LoginScreen extends React.Component {
         }
 
         let token = await Notifications.getExpoPushTokenAsync();
+        AsyncStorage.setItem("expoToken", token);
         console.log("notiToken: " + token);
         firebase.database().ref('users/'+userid).update({
             expoToken: token,
