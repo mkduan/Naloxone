@@ -23,7 +23,7 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
             }
       });
       console.log("Returning all the messages: " + messages);
-      return Promise.all(messages.toString());
+      return Promise.all(messages);
     }).then(messages => {
         console.log("using expo to send the notifications");
         return fetch('https://exp.host/--/api/v2/push/send', {
