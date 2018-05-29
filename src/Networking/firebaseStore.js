@@ -128,7 +128,8 @@ export const storeLocation = (kit, kitnoti) => {
               kitNoti: null,
               expoToken: null,
             });
-            AsyncStorage.removeItem('latlngPath');
+            //TODO: Always keep latlng path incase of distress
+            //AsyncStorage.removeItem('latlngPath');
           }
         } else {
           console.log("Can't find user");

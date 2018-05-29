@@ -7,6 +7,7 @@ admin.initializeApp(functions.config().firebase);
 exports.sendPushNotification = functions.https.onRequest((req, res) => {
     var messages = [];
     const latlngCategory = req.query.latlng;
+    const userID = req.query.userID;
     console.log("The latlng of the request: " + latlngCategory);
     return admin.database().ref('/users').once('value').then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -26,7 +27,7 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
       return Promise.all(messages);
     }).then(messages => {
         console.log("using expo to send the notifications");
-        return fetch('https://exp.host/--/api/v2/push/send', {
+        fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -34,8 +35,11 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
             },
             body: JSON.stringify(messages)
         });
+        //TODO: Test to see if this helps confirm
+        return res.send("success " + latlngCategory + ", " + userID);
     })
     .catch(reason => {
         console.log(reason);
+        return res.send("fail");
     });
 });
