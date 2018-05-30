@@ -18,17 +18,16 @@ export default class DistressScreen extends React.Component {
       ],
       { cancelable: false }
     );
-    let userID = null;
-    getInternalUserInfo('userID')
-    .then(res => userID = res)
-    .catch(err => console.log("can't find userID"));
+    let expoToken = null;
+    getInternalUserInfo('expoToken')
+    .then(res => expoToken = res)
+    .catch(err => console.log("can't find expoToken"));
     getInternalUserInfo('latlngPath')
     .then(latlngPath => {
-      //TODO: Need to get the users ID too
-      fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendPushNotification?latlng='+latlngPath+'&userID='+userID)
+      fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendPushNotification?latlng='+latlngPath+'&userExpoToken='+expoToken)
       .then(res => {
         //TODO: If true then it's all good
-        console.log(res.ok);
+        console.log(res);
       })
       .catch(err => console.log('Cant get response from distress: ' + err));
     })

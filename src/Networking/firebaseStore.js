@@ -69,15 +69,10 @@ latlngClassifier = (lat, lng) => {
   let latCat = latDec.substr(0,2);
   let lngCat = lngDec.substr(0,2);
 
-  let mylatCat = latSplit[0]+"."+latCat;
-  let mylngCat = lngSplit[0]+"."+lngCat;
-  console.log("latitude category: " + mylatCat);
-  console.log("longitude category: " + mylngCat);
-
   let latPath = latSplit[0]+"o"+latCat;
   let lngPath = lngSplit[0]+"o"+lngCat;
 
-  let latlng = mylatCat + ',' + mylngCat;
+  let latlng = lat + ',' + lng;
   let latlngPath = latPath + ',' + lngPath;
   return [latlng, latlngPath];
 };
@@ -92,6 +87,10 @@ export const storeLocation = (kit, kitnoti) => {
       let mylatlng = latlngArray[0];
       let latlngPath = latlngArray[1];
       let expoToken = null;
+      AsyncStorage.setItem("latlngPath", latlngPath);
+      console.log('storing latlngPath: ' + latlngPath);
+      AsyncStorage.setItem("latlng", mylatlng);
+      console.log('storing mylatlng: ' + mylatlng);
       getInternalUserInfo('expoToken')
       .then(res => {
         expoToken = res;
@@ -106,26 +105,28 @@ export const storeLocation = (kit, kitnoti) => {
             firebase.database().ref('users/'+res).update({
               kitHolder: kit,
               kitNoti: kitnoti,
-              lat: lat,
-              lng: long,
               latlng: mylatlng,
               //Should update expoToken constantly?
             });
             console.log("lat lng path: " + latlngPath);
-            firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
-              kitNoti: kitnoti,
-              expoToken: expoToken,
-            });
-            AsyncStorage.setItem("latlngPath", latlngPath);
-            console.log(mylatlng);
+            if(kitnoti) {
+              firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
+                expoToken: expoToken,
+                latlng: mylatlng,
+              });
+            } else {
+              firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
+                expoToken: null,
+                latlng: null,
+              });
+            }
           } else {
             console.log("not storing latlng");
             firebase.database().ref('users/'+res).update({
               kitHolder: kit,
-              kitNoti: kitnoti,
             });
             firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
-              kitNoti: null,
+              latlng: null,
               expoToken: null,
             });
             //TODO: Always keep latlng path incase of distress
@@ -144,6 +145,8 @@ export const storeLocation = (kit, kitnoti) => {
 
 export const updateLatlng = (kit, kitnoti) => {
   let userID = null;
+  let expoToken = null;
+  let latlng = null;
   getInternalUserInfo('userID')
     .then(res => {
       userID = res;
@@ -155,14 +158,34 @@ export const updateLatlng = (kit, kitnoti) => {
       }
     })
     .catch(err => console.log("Can't get internal user; updateLatlng: " + err));
+
+  getInternalUserInfo('expoToken')
+    .then(res => {
+      expoToken = res;
+    })
+    .catch(err => console.log("error finding expotoken in internal"));
+
+  getInternalUserInfo('latlng')
+    .then(res => {
+      latlng = res;
+    })
+    .catch(err => console.log("error finding expotoken in internal"));
   
   if(kit === true) {
     getInternalUserInfo('latlngPath')
       .then(res => {
         console.log("updatlatlng; latlngPath: " + res);
-        firebase.database().ref('latlng/'+res+'/'+userID).update({
-          kitNoti: kitnoti,
-        });
+        if (kitnoti) {
+          firebase.database().ref('latlng/'+res+'/'+userID).update({
+            expoToken: expoToken,
+            latlng: latlng,
+          });
+        } else {
+          firebase.database().ref('latlng/'+res+'/'+userID).update({
+            expoToken: null,
+            latlng: null,
+          });
+        }
       })
       .catch(err => console.log("Can't get interal latlng path: " + err));
   }

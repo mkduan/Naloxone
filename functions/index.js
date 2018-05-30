@@ -4,26 +4,101 @@ var fetch = require('node-fetch');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
+function baseCoord(coord, length) {
+    var latDecimal = parseInt(coord.substring(length-2, length));
+    return --latDecimal;
+  }
+
+function createLatlng(latDecimal, lngDecimal, latWhole, lngWhole) {
+    latWhole = parseInt(latWhole);
+    lngWhole = parseInt(lngWhole);
+    switch(latDecimal.length) {
+        case 1:
+            latDecimal = "0" + latDecimal;
+            break;
+        case 2:
+            latDecimal = latDecimal.toString();
+            break;
+        case 3:
+            latDecimal = "00";
+            latWhole++;
+            break;
+    }
+    switch(lngDecimal.length) {
+        case 1:
+            lngDecimal = "0" + lngDecimal;
+            break;
+        case 2:
+            lngDecimal = lngDecimal.toString();
+            break;
+        case 3:
+            lngDecimal = "00";
+            lngWhole++;
+            break;
+    }
+    var res = latWhole+"o"+latDecimal+","+lngWhole+"o"+lngDecimal;
+    return res;
+}
+
+function getAllLatLngNearby(latlng) {
+    var res = latlng.split(",");
+
+    var latlngCategories = [];
+    var latCategories = [];
+    var lngCategories = [];
+    var latLength =res[0].length;
+    var lngLength = res[1].length;
+
+    var latBase = baseCoord(res[0],latLength);
+    var lngBase = baseCoord(res[1],lngLength);
+    var wholeLat = res[0].split("o")[0];
+    var wholeLng = res[1].split("o")[0];
+
+    var i = null;
+    var j = null;
+
+    for (i = 0; i < 3; i++) {
+        latCategories.push(latBase.toString());
+        latBase++;
+    }
+    for (i = 0; i < 3; i++) {
+        lngCategories.push(lngBase.toString());
+        lngBase++;
+    }
+
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            latlngCategories.push(createLatlng(latCategories[i], lngCategories[j], wholeLat, wholeLng));
+        }
+    }
+
+    return latlngCategories;
+}
+
 exports.sendPushNotification = functions.https.onRequest((req, res) => {
     var messages = [];
     const latlngCategory = req.query.latlng;
-    const userID = req.query.userID;
+    var allLatlngPaths = getAllLatLngNearby(latlngCategory);
+    console.log("allLatlngPaths: " + allLatlngPaths);
+    const userExpoToken = req.query.userExpoToken;
     console.log("The latlng of the request: " + latlngCategory);
-    return admin.database().ref('/users').once('value').then((snapshot) => {
+    console.log("The users expoToken is: " + userExpoToken);
+    return admin.database().ref('/latlng/'+latlngCategory).once('value').then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
 
             var expoToken = childSnapshot.val().expoToken;
 
-            console.log(expoToken);
+            console.log("all expotoken in category: " + expoToken);
 
             if(expoToken) {
+                //If the token matches the one being called then don't add to the list
                 messages.push({
                     "to": expoToken,
                     "body": "Testing notification"
                 });
             }
       });
-      console.log("Returning all the messages: " + messages);
+      console.log("Returning all the messages: " + JSON.stringify(messages));
       return Promise.all(messages);
     }).then(messages => {
         console.log("using expo to send the notifications");
@@ -36,7 +111,7 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
             body: JSON.stringify(messages)
         });
         //TODO: Test to see if this helps confirm
-        return res.send("success " + latlngCategory + ", " + userID);
+        return res.send("success " + latlngCategory + ", " + userExpoToken);
     })
     .catch(reason => {
         console.log(reason);
