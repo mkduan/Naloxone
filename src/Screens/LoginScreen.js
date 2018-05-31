@@ -72,7 +72,6 @@ export default class LoginScreen extends React.Component {
             this.setState({
                 successfulAuth: true,
             });
-            //This is the problem
             const firebaseRes = await firebase
               .auth()
               .signInAndRetrieveDataWithCredential(credential)
@@ -86,7 +85,7 @@ export default class LoginScreen extends React.Component {
             }
             console.log(userid);
             storeUserID(userid);
-            this.registerForPushNotificationsAsync(userid);
+            await this.registerForPushNotificationsAsync(userid);
           } else {
             return { cancelled: true };
           }
