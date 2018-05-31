@@ -38,19 +38,16 @@ export default class SettingsScreen extends React.Component {
         loadPreferences(res)
           .then(() => {
             getInternalUserInfoBool('kitHolder')
-              .then(res => {
-                console.log("kit setting res: " + res);
-                if(res !== null) {
-                  this.setState({ switchValue: res});
+              .then(kitHolderRes => {
+                console.log("kit setting res: " + kitHolderRes);
+                if(kitHolderRes !== null) {
+                  this.setState({ switchValue: kitHolderRes});
                 }
-              })
-              .catch(err => console.log("An error occurred getting KitHolder: " + err));
-
-              getInternalUserInfoBool('kitNoti')
-                .then(res => {
-                  console.log("noti setting res: " + res);
-                  if(res !== null) {
-                    this.setState({ switchValueNoti: res});
+                getInternalUserInfoBool('kitNoti')
+                .then(kitNotiRes => {
+                  console.log("noti setting res: " + kitNotiRes);
+                  if(kitNotiRes !== null) {
+                    this.setState({ switchValueNoti: kitNotiRes});
                   }
                   storeLocation(this.state.switchValue, this.state.switchValueNoti);
                   this.setState({
@@ -58,6 +55,8 @@ export default class SettingsScreen extends React.Component {
                   });
                 })
                 .catch(err => console.log("An error occurred getting KitNoti: " + err));
+              })
+              .catch(err => console.log("An error occurred getting KitHolder: " + err));
           })
           .catch (err => console.log("error in loading settings value"));
       })

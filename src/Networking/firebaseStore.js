@@ -10,6 +10,7 @@ export const newUserStoreData = (userid) => {
   console.log("Welcome new user!");
 };
 
+//TODO: clean this up because firebase is already asynchronous
 export const loadPreferences = async (userid) => {
   let ref = await firebase.database().ref('users/'+userid+'/kitHolder');
   await ref.once("value", function(snapshot) {
@@ -77,7 +78,14 @@ latlngClassifier = (lat, lng) => {
   return [latlng, latlngPath];
 };
 
+/*TODO: Always assume that the latlng cartegory changed, take the latlng category currently stored,
+and then check with the latlng taken, if it's the same then w/e, if it's different then you have to
+delete the one stored before creating a new one.
+*/
 export const storeLocation = (kit, kitnoti) => {
+  let myoldLatlngPath = null;
+  let expoToken = null;
+  let userID = null;
   console.log("Storing location");
   navigator.geolocation.getCurrentPosition(
     position => {
@@ -86,57 +94,73 @@ export const storeLocation = (kit, kitnoti) => {
       let latlngArray = latlngClassifier(lat, long);
       let mylatlng = latlngArray[0];
       let latlngPath = latlngArray[1];
-      let expoToken = null;
       AsyncStorage.setItem("latlngPath", latlngPath);
       console.log('storing latlngPath: ' + latlngPath);
       AsyncStorage.setItem("latlng", mylatlng);
       console.log('storing mylatlng: ' + mylatlng);
       getInternalUserInfo('expoToken')
-      .then(res => {
-        expoToken = res;
-      })
-      .catch(err => console.log("error finding expotoken in internal"));
-      getInternalUserInfo('userID')
-      .then(res => {
-        if(res !== null) {
-          if(kit === true){
-            latlngClassifier(lat, long);
-            console.log("storing latlng");
-            firebase.database().ref('users/'+res).update({
-              kitHolder: kit,
-              kitNoti: kitnoti,
-              latlng: mylatlng,
-              //Should update expoToken constantly?
-            });
-            console.log("lat lng path: " + latlngPath);
-            if(kitnoti) {
-              firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
-                expoToken: expoToken,
-                latlng: mylatlng,
-              });
-            } else {
-              firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
-                expoToken: null,
-                latlng: null,
-              });
+      .then(expoRes => {
+        expoToken = expoRes;
+        getInternalUserInfo('userID')
+        .then(userRes => {
+          userID = userRes;
+          
+          firebase.database().ref('users/'+userID+'/latlngPath').once("value")
+          .then(snapshot => {
+            console.log("what the figgity frack path: " + snapshot.val())
+            myoldLatlngPath = snapshot.val();
+            if(myoldLatlngPath !== latlngPath) {
+              if (myoldLatlngPath !== null) {
+                firebase.database().ref('latlng/'+myoldLatlngPath+'/'+userID).update({
+                  expoToken: null,
+                  latlng: null,
+                });
+              }
             }
-          } else {
-            console.log("not storing latlng");
-            firebase.database().ref('users/'+res).update({
-              kitHolder: kit,
-            });
-            firebase.database().ref('latlng/'+latlngPath+'/'+res).update({
-              latlng: null,
-              expoToken: null,
-            });
-            //TODO: Always keep latlng path incase of distress
-            //AsyncStorage.removeItem('latlngPath');
-          }
-        } else {
-          console.log("Can't find user");
-        }
+
+            if(userID !== null) {
+              if(kit === true){
+                console.log("storing latlng");
+                firebase.database().ref('users/'+userID).update({
+                  kitHolder: kit,
+                  kitNoti: kitnoti,
+                  latlng: mylatlng,
+                  latlngPath: latlngPath,
+                  //Should update expoToken constantly?
+                });
+                console.log("lat lng path: " + latlngPath);
+                if(kitnoti) {
+                  firebase.database().ref('latlng/'+latlngPath+'/'+userID).update({
+                    expoToken: expoToken,
+                    latlng: mylatlng,
+                  });
+                } else {
+                  firebase.database().ref('latlng/'+latlngPath+'/'+userID).update({
+                    expoToken: null,
+                    latlng: null,
+                  });
+                }
+              } else {
+                console.log("not storing latlng");
+                firebase.database().ref('users/'+userID).update({
+                  kitHolder: kit,
+                });
+                firebase.database().ref('latlng/'+latlngPath+'/'+userID).update({
+                  latlng: null,
+                  expoToken: null,
+                });
+                //TODO: Always keep latlng path incase of distress
+                //AsyncStorage.removeItem('latlngPath');
+              }
+            } else {
+              console.log("Can't find user");
+            }
+          })
+          .catch(err => console.log("Literally just in tears: " + err));
+        })
+        .catch(err => console.log("error finding userID in internal: " + err));
       })
-      .catch(err => console.log("Can't get internal user; store location : " + err));
+      .catch(err => console.log("error finding expotoken in internal: " + err));
     },
     (error) => console.log(error.message),
     { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
