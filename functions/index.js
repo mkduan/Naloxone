@@ -75,32 +75,40 @@ function getAllLatLngNearby(latlng) {
     return latlngCategories;
 }
 
+function getAllMessages(allLatlngPaths) {
+    var messages = [];
+    for (i = 0; i < allLatlngPaths.length; i++) {
+        return admin.database().ref('/latlng/'+allLatlngPaths[i]).once('value').then((snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+    
+                var expoToken = childSnapshot.val().expoToken;
+    
+                if(expoToken) {
+                    //If the token matches the one being called then don't add to the list
+                    messages.push({
+                        "to": expoToken,
+                        "body": "Testing notification"
+                    });
+                }
+        });
+        console.log("Returning all the messages in " + allLatlngPaths[i] + ": " + JSON.stringify(messages));
+        return Promise.all(messages);
+        });
+    }
+    resolve(messages);
+}
+
 exports.sendPushNotification = functions.https.onRequest((req, res) => {
     var messages = [];
+    var i = null;
     const latlngCategory = req.query.latlng;
     var allLatlngPaths = getAllLatLngNearby(latlngCategory);
     console.log("allLatlngPaths: " + allLatlngPaths);
     const userExpoToken = req.query.userExpoToken;
     console.log("The latlng of the request: " + latlngCategory);
     console.log("The users expoToken is: " + userExpoToken);
-    return admin.database().ref('/latlng/'+latlngCategory).once('value').then((snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-
-            var expoToken = childSnapshot.val().expoToken;
-
-            console.log("all expotoken in category: " + expoToken);
-
-            if(expoToken) {
-                //If the token matches the one being called then don't add to the list
-                messages.push({
-                    "to": expoToken,
-                    "body": "Testing notification"
-                });
-            }
-      });
-      console.log("Returning all the messages: " + JSON.stringify(messages));
-      return Promise.all(messages);
-    }).then(messages => {
+    getAllMessages(allLatlngPaths)
+    .then(messages => {
         console.log("using expo to send the notifications");
         fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
@@ -118,3 +126,23 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
         return res.send("fail");
     });
 });
+
+/*
+then(messages => {
+            console.log("using expo to send the notifications");
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messages)
+            });
+            //TODO: Test to see if this helps confirm
+            return res.send("success " + latlngCategory + ", " + userExpoToken);
+        })
+        .catch(reason => {
+            console.log(reason);
+            return res.send("fail");
+        });
+*/
