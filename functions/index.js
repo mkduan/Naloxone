@@ -4,6 +4,26 @@ var fetch = require('node-fetch');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
+Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+ }
+
+//TODO: have to pass the latlng of the user too i guess
+function HarversineEquation(currentlatlng, userLatlng) {
+    var currentLatlngArray = currentlatlng.split(",");
+    var userLatlngArray = userLatlng.split(","); 
+    var currentLat = parseFloat(currentLatlngArray[0]).toRad();
+    var currentLng = parseFloat(currentLatlngArray[1]).toRad();
+    var userLat = parseFloat(userLatlngArray[0]).toRad();
+    var userLng = parseFloat(userLatlngArray[1]).toRad();
+    var R = 6372.8; // km
+    var dLat = userLat - currentLat;
+    var dLon = userLng - currentLng;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat /2) + Math.sin(dLon / 2) * Math.sin(dLon /2) * Math.cos(currentLat) * Math.cos(userLat);
+    var c = 2 * Math.asin(Math.sqrt(a));
+    return R * c;
+}
+
 function baseCoord(coord, length) {
     var latDecimal = parseInt(coord.substring(length-2, length));
     return --latDecimal;
@@ -121,25 +141,6 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
             console.log(reason);
         });
     }
+    console.log(HarversineEquation("36.12,-86.67","33.94,-118.40"));
     return res.send("success " + latlngCategory + ", " + userExpoToken);
 });
-
-/*
-then(messages => {
-            console.log("using expo to send the notifications");
-            fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(messages)
-            });
-            //TODO: Test to see if this helps confirm
-            return res.send("success " + latlngCategory + ", " + userExpoToken);
-        })
-        .catch(reason => {
-            console.log(reason);
-            return res.send("fail");
-        });
-*/
