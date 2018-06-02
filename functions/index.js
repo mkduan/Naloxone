@@ -95,18 +95,21 @@ function getAllLatLngNearby(latlng) {
     return latlngCategories;
 }
 
-function getMessageFromPath(singleLatlngPath) {
+function getMessageFromPath(singleLatlngPath, currentlatlng) {
     var messages = [];
     return admin.database().ref('/latlng/'+singleLatlngPath).once('value').then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
 
             var expoToken = childSnapshot.val().expoToken;
+            var userLatlng = childSnapshot.val().latlng;
+
+            var distance = HarversineEquation(currentlatlng, userLatlng);
 
             if(expoToken) {
                 //If the token matches the one being called then don't add to the list
                 messages.push({
                     "to": expoToken,
-                    "body": "Testing notification"
+                    "body": "The distance is: " + distance + " km",
                 });
             }
     });
@@ -117,14 +120,16 @@ function getMessageFromPath(singleLatlngPath) {
 
 exports.sendPushNotification = functions.https.onRequest((req, res) => {
     var i = null;
-    const latlngCategory = req.query.latlng;
+    const latlngCategory = req.query.latlngPath;
     var allLatlngPaths = getAllLatLngNearby(latlngCategory);
     console.log("allLatlngPaths: " + allLatlngPaths);
     const userExpoToken = req.query.userExpoToken;
+    const userLatlng = req.query.latlng;
     console.log("The latlng of the request: " + latlngCategory);
     console.log("The users expoToken is: " + userExpoToken);
+    console.log("The users latlng is: " + userLatlng);
     for (i = 0; i < allLatlngPaths.length; i++) {
-        getMessageFromPath(allLatlngPaths[i])
+        getMessageFromPath(allLatlngPaths[i], userLatlng)
         .then(messages => {
             console.log("using expo to send the notifications");
             fetch('https://exp.host/--/api/v2/push/send', {
@@ -142,5 +147,5 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
         });
     }
     console.log(HarversineEquation("36.12,-86.67","33.94,-118.40"));
-    return res.send("success " + latlngCategory + ", " + userExpoToken);
+    return res.send("success " + latlngCategory + ", " + userExpoToken + ", " + userLatlng);
 });

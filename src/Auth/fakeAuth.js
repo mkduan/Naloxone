@@ -2,7 +2,7 @@ import { AsyncStorage } from "react-native";
 import * as firebase from 'firebase';
 
 export const USER_KEY = "auth-demo-key";
-let keys = [USER_KEY, 'kitHolder', 'userID', 'latlngPath', 'expoToken'];
+let keys = [USER_KEY, 'kitHolder', 'userID', 'latlngPath', 'expoToken', 'latlng'];
 
 export const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
 

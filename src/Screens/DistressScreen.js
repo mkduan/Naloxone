@@ -19,19 +19,27 @@ export default class DistressScreen extends React.Component {
       { cancelable: false }
     );
     let expoToken = null;
+    let latlng = null;
     getInternalUserInfo('expoToken')
-    .then(res => expoToken = res)
-    .catch(err => console.log("can't find expoToken"));
-    getInternalUserInfo('latlngPath')
-    .then(latlngPath => {
-      fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendPushNotification?latlng='+latlngPath+'&userExpoToken='+expoToken)
-      .then(res => {
-        //TODO: If true then it's all good
-        console.log(res);
+    .then(tokenRes => {
+      expoToken = tokenRes;
+      getInternalUserInfo('latlng')
+      .then(latlngRes => {
+        latlng = latlngRes;
+        getInternalUserInfo('latlngPath')
+        .then(latlngPath => {
+          fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendPushNotification?latlngPath='+latlngPath+'&userExpoToken='+expoToken+'&latlng='+latlng)
+          .then(res => {
+            //TODO: If true then it's all good
+            console.log(res);
+          })
+          .catch(err => console.log('Cant get response from distress: ' + err));
+        })
+        .catch(err => console.log("cant find internal latlng path"));
       })
-      .catch(err => console.log('Cant get response from distress: ' + err));
+      .catch(err => console.log("can't find expoToken"));
     })
-    .catch(err => console.log("cant find internal latlng path"));
+    .catch(err => console.log("can't find expoToken"));
   }
 
   render() {
