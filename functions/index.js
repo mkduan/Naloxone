@@ -21,7 +21,10 @@ function HarversineEquation(currentlatlng, userLatlng) {
     var dLon = userLng - currentLng;
     var a = Math.sin(dLat / 2) * Math.sin(dLat /2) + Math.sin(dLon / 2) * Math.sin(dLon /2) * Math.cos(currentLat) * Math.cos(userLat);
     var c = 2 * Math.asin(Math.sqrt(a));
-    return R * c;
+    var res = R * c;
+    res = res.toString();
+    res = res.substring(0,5);
+    return res;
 }
 
 function baseCoord(coord, length) {

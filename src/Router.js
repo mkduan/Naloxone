@@ -8,19 +8,32 @@ import {
 
 import Tabs from './Tabs.js';
 import LoginScreen from "./Screens/LoginScreen.js";
+import HandleNotificationScreen from './Screens/HandleNotificationScreen.js'
 
 export const SignedIn = Tabs;
 
-export const createRootNavigator = (signedIn = false) => {
+export const createRootNavigator = (signedIn = false, handleNotificaion) => {
+  let _initialRouteName = null;
+  if (handleNotificaion) {
+    _initialRouteName = "HandleNotificationScreen";
+  } else {
+    if (signedIn) {
+      _initialRouteName = "SignedIn";
+    } else {
+      _initialRouteName = "LoginScreen";
+    }
+  }
+
   return SwitchNavigator(
     {
       SignedIn: {
         screen: SignedIn
       },
-      LoginScreen
+      LoginScreen,
+      HandleNotificationScreen
     },
     {
-      initialRouteName: signedIn ? "SignedIn" : "LoginScreen"
+      initialRouteName: _initialRouteName
     }
   );
 };
