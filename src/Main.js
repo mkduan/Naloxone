@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  AsyncStorage,
 } from 'react-native';
 import {isSignedIn} from './Auth/fakeAuth.js';
 import {createRootNavigator} from './Router.js';
@@ -26,12 +27,14 @@ export default class Main extends React.Component {
       .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
       .catch(err => alert("An error occurred"));
 
-      //TODO: See if this notification handler works
       this.notificationSubscription = Notifications.addListener(this._handleNotification);
   }
 
+  //TODO: setting state might be throwing warning
   _handleNotification = (notification) => {
     this.setState({handleNotification: true});
+    console.log("notification distance data is: " + JSON.stringify(notification.data.distance));
+    AsyncStorage.setItem("distressDistance", JSON.stringify(notification.data.distance));
   }
 
   render() {

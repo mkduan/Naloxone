@@ -107,12 +107,16 @@ function getMessageFromPath(singleLatlngPath, currentlatlng) {
             var userLatlng = childSnapshot.val().latlng;
 
             var distance = HarversineEquation(currentlatlng, userLatlng);
+            var notificationData = new Object();
+            notificationData.distance = distance;
 
             if(expoToken) {
                 //If the token matches the one being called then don't add to the list
                 messages.push({
                     "to": expoToken,
-                    "body": "The distance is: " + distance + " km",
+                    "title": "Distress Call",
+                    "body": "The distress call distance is: " + distance + " km",
+                    "data": notificationData,
                 });
             }
     });
