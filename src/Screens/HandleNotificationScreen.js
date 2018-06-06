@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, Button, AsyncStorage, ActivityIndicator, StatusBar, Alert } from 'react-native';
 import { Constants } from 'expo';
 import { getInternalUserInfo } from '../Auth/fakeAuth.js';
+import openGps from '../Networking/openGPS';
 
 let keys = ['distressDistance', 'distressUserExpoToken', 'distressUserID'];
 
@@ -13,6 +14,7 @@ export default class HandleNotificationScreen extends Component {
           distressDistance: null,
           distressUserExpoToken: null,
           distressUserID: null,
+          distressUserLatlng: null,
         };
     }
 
@@ -25,7 +27,12 @@ export default class HandleNotificationScreen extends Component {
                 this.setState({distressUserExpoToken: userExpoTokenRes});
                 getInternalUserInfo("distressUserID")
                 .then(userIDRes => {
-                    this.setState({distressUserID: userIDRes, isLoading: false});
+                    this.setState({distressUserID: userIDRes});
+                    getInternalUserInfo("distressUserLatlng")
+                    .then(latlngRes => {
+                        this.setState({distressUserLatlng: latlngRes, isLoading: false});
+                    })
+                    .catch(err => console.log("can't find distress latlng in handling notification: " + err));
                 })
                 .catch(err => console.log("can't find distress distance in handling notification: " + err));    
             })
@@ -56,8 +63,8 @@ export default class HandleNotificationScreen extends Component {
                     accessibilityLabel="Learn more about this purple button"
                     onPress={() => {
                         AsyncStorage.multiRemove(keys);
-                        var userExpoToken = this.state.distressUserExpoToken.replace(/"/g, "");;
-                        var userID = this.state.distressUserID.replace(/['"]/g, "");;
+                        var userExpoToken = this.state.distressUserExpoToken.replace(/"/g, "");
+                        var userID = this.state.distressUserID.replace(/['"]/g, "");
                         fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendDistressConfirmation?userExpoToken='+userExpoToken+'&userID='+userID)
                         .then(res => {
                             console.log(res);
@@ -68,6 +75,9 @@ export default class HandleNotificationScreen extends Component {
                                     [
                                         {text: 'OK', onPress: () => {
                                             console.log('OK pressed for distress confirmation.');
+                                            let latlngResult = this.state.distressUserLatlng.replace(/"/g, "");
+                                            latlngResult = latlngResult.split(",");
+                                            openGps(latlngResult[0], latlngResult[1]);
                                             this.props.navigation.navigate("SignedIn");
                                         }},
                                     ],

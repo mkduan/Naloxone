@@ -111,6 +111,7 @@ function getMessageFromPath(singleLatlngPath, currentlatlng, userExpoToken, user
             notificationData.distance = distance;
             notificationData.userExpoToken = userExpoToken;
             notificationData.userID = userID;
+            notificationData.userLatlng = currentlatlng;
             notificationData.function = "distressCall";
 
             if(expoToken && expoToken !== userExpoToken) {

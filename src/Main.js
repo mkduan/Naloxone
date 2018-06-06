@@ -42,6 +42,9 @@ export default class Main extends React.Component {
 
       console.log("notification userID data is: " + JSON.stringify(notification.data.userID));
       AsyncStorage.setItem("distressUserID", JSON.stringify(notification.data.userID));
+
+      console.log("notification latlng data is: " + JSON.stringify(notification.data.userLatlng));
+      AsyncStorage.setItem("distressUserLatlng", JSON.stringify(notification.data.userLatlng));
     }
     //TODO: the user should be able to send a message to say like hey i'm going to the hospital, tis all good.
   }
