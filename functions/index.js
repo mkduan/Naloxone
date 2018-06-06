@@ -111,6 +111,7 @@ function getMessageFromPath(singleLatlngPath, currentlatlng, userExpoToken, user
             notificationData.distance = distance;
             notificationData.userExpoToken = userExpoToken;
             notificationData.userID = userID;
+            notificationData.function = "distressCall";
 
             if(expoToken && expoToken !== userExpoToken) {
                 messages.push({
@@ -181,14 +182,18 @@ exports.sendDistressConfirmation = functions.https.onRequest((req, res) => {
 
     return admin.database().ref('/users/'+userID).once('value').then((snapshot) => {
 
+        //TODO: handle when there is no inDistress status
         var distressStatus = snapshot.val().inDistress;
 
         if(distressStatus !== null) {
             distressCallAnswered(userID);
+            var notificationData = new Object();
+            notificationData.function = "distressConfirmation";
             var messages = [{
                 "to": userExpoToken,
                 "title": "Distress Respond",
                 "body": "A Naloxone kit holder has responeded to your distress call",
+                "data": notificationData,
             }];
             console.log("using expo to send the notifications");
             fetch('https://exp.host/--/api/v2/push/send', {

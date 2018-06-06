@@ -32,15 +32,18 @@ export default class Main extends React.Component {
 
   //TODO: setting state might be throwing warning
   _handleNotification = (notification) => {
-    this.setState({handleNotification: true});
-    console.log("notification distance data is: " + JSON.stringify(notification.data.distance));
-    AsyncStorage.setItem("distressDistance", JSON.stringify(notification.data.distance));
+    if(notification.data.function === "distressCall") {
+      this.setState({handleNotification: true});
+      console.log("notification distance data is: " + JSON.stringify(notification.data.distance));
+      AsyncStorage.setItem("distressDistance", JSON.stringify(notification.data.distance));
 
-    console.log("notification expoToken data is: " + JSON.stringify(notification.data.userExpoToken));
-    AsyncStorage.setItem("distressUserExpoToken", JSON.stringify(notification.data.userExpoToken));
+      console.log("notification expoToken data is: " + JSON.stringify(notification.data.userExpoToken));
+      AsyncStorage.setItem("distressUserExpoToken", JSON.stringify(notification.data.userExpoToken));
 
-    console.log("notification userID data is: " + JSON.stringify(notification.data.userID));
-    AsyncStorage.setItem("distressUserID", JSON.stringify(notification.data.userID));
+      console.log("notification userID data is: " + JSON.stringify(notification.data.userID));
+      AsyncStorage.setItem("distressUserID", JSON.stringify(notification.data.userID));
+    }
+    //TODO: the user should be able to send a message to say like hey i'm going to the hospital, tis all good.
   }
 
   render() {
