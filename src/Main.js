@@ -35,6 +35,12 @@ export default class Main extends React.Component {
     this.setState({handleNotification: true});
     console.log("notification distance data is: " + JSON.stringify(notification.data.distance));
     AsyncStorage.setItem("distressDistance", JSON.stringify(notification.data.distance));
+
+    console.log("notification expoToken data is: " + JSON.stringify(notification.data.userExpoToken));
+    AsyncStorage.setItem("distressUserExpoToken", JSON.stringify(notification.data.userExpoToken));
+
+    console.log("notification userID data is: " + JSON.stringify(notification.data.userID));
+    AsyncStorage.setItem("distressUserID", JSON.stringify(notification.data.userID));
   }
 
   render() {

@@ -98,7 +98,7 @@ function getAllLatLngNearby(latlng) {
     return latlngCategories;
 }
 
-function getMessageFromPath(singleLatlngPath, currentlatlng) {
+function getMessageFromPath(singleLatlngPath, currentlatlng, userExpoToken, userID) {
     var messages = [];
     return admin.database().ref('/latlng/'+singleLatlngPath).once('value').then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -109,9 +109,10 @@ function getMessageFromPath(singleLatlngPath, currentlatlng) {
             var distance = HarversineEquation(currentlatlng, userLatlng);
             var notificationData = new Object();
             notificationData.distance = distance;
+            notificationData.userExpoToken = userExpoToken;
+            notificationData.userID = userID;
 
-            if(expoToken) {
-                //If the token matches the one being called then don't add to the list
+            if(expoToken && expoToken !== userExpoToken) {
                 messages.push({
                     "to": expoToken,
                     "title": "Distress Call",
@@ -125,18 +126,33 @@ function getMessageFromPath(singleLatlngPath, currentlatlng) {
     });
 }
 
+function userInDistress(userID) {
+    return admin.database().ref('/users/'+userID).update({
+        inDistress: true,
+    });
+}
+
+function distressCallAnswered(userID) {
+    return admin.database().ref('/users/'+userID).update({
+        inDistress: null,
+    });
+}
+
 exports.sendPushNotification = functions.https.onRequest((req, res) => {
     var i = null;
     const latlngCategory = req.query.latlngPath;
-    var allLatlngPaths = getAllLatLngNearby(latlngCategory);
-    console.log("allLatlngPaths: " + allLatlngPaths);
     const userExpoToken = req.query.userExpoToken;
     const userLatlng = req.query.latlng;
+    const userID = req.query.userID;
     console.log("The latlng of the request: " + latlngCategory);
     console.log("The users expoToken is: " + userExpoToken);
     console.log("The users latlng is: " + userLatlng);
+    console.log("The userID is: " + userID);
+    var allLatlngPaths = getAllLatLngNearby(latlngCategory);
+    console.log("allLatlngPaths: " + allLatlngPaths);
+    userInDistress(userID); 
     for (i = 0; i < allLatlngPaths.length; i++) {
-        getMessageFromPath(allLatlngPaths[i], userLatlng)
+        getMessageFromPath(allLatlngPaths[i], userLatlng, userExpoToken,userID)
         .then(messages => {
             console.log("using expo to send the notifications");
             fetch('https://exp.host/--/api/v2/push/send', {
@@ -153,6 +169,38 @@ exports.sendPushNotification = functions.https.onRequest((req, res) => {
             console.log(reason);
         });
     }
-    console.log(HarversineEquation("36.12,-86.67","33.94,-118.40"));
-    return res.send("success " + latlngCategory + ", " + userExpoToken + ", " + userLatlng);
+    return res.send("success " + latlngCategory + ", " + userExpoToken + ", " + userLatlng + ", " + userID);
+});
+
+exports.sendDistressConfirmation = functions.https.onRequest((req, res) => {
+
+    const userExpoToken = req.query.userExpoToken;
+    const userID = req.query.userID;
+    console.log("The users expoToken is: " + userExpoToken);
+    console.log("The userID is: " + userID);
+
+    return admin.database().ref('/users/'+userID).once('value').then((snapshot) => {
+
+        var distressStatus = snapshot.val().inDistress;
+
+        if(distressStatus !== null) {
+            distressCallAnswered(userID);
+            var messages = [{
+                "to": userExpoToken,
+                "title": "Distress Respond",
+                "body": "A Naloxone kit holder has responeded to your distress call",
+            }];
+            console.log("using expo to send the notifications");
+            fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messages)
+            });
+        }
+        //Else find a way for send a callback from this so that it triggers an alert
+        return res.send("success " +  userExpoToken + ", " + userID);
+    });
 });
