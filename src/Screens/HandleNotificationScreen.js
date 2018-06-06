@@ -55,25 +55,38 @@ export default class HandleNotificationScreen extends Component {
                     color="#db2828"
                     accessibilityLabel="Learn more about this purple button"
                     onPress={() => {
-                        Alert.alert(
-                            'Distress Call Confirmation',
-                            'A confirmation of the distress call has been send out to the user in distress.',
-                            [
-                                {text: 'OK', onPress: () => {
-                                    console.log('OK pressed for distress confirmation.');
-                                    AsyncStorage.multiRemove(keys);
-                                    //TODO: Can probably clean this up
-                                    var userExpoToken = this.state.distressUserExpoToken.replace(/"/g, "");;
-                                    var userID = this.state.distressUserID.replace(/['"]/g, "");;
-                                    fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendDistressConfirmation?userExpoToken='+userExpoToken+'&userID='+userID)
-                                    .then(res => {
-                                        console.log(res);
-                                        this.props.navigation.navigate("SignedIn");
-                                    });
-                                }},
-                            ],
-                            {cancelable: false}
-                        );
+                        AsyncStorage.multiRemove(keys);
+                        var userExpoToken = this.state.distressUserExpoToken.replace(/"/g, "");;
+                        var userID = this.state.distressUserID.replace(/['"]/g, "");;
+                        fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendDistressConfirmation?userExpoToken='+userExpoToken+'&userID='+userID)
+                        .then(res => {
+                            console.log(res);
+                            if(res.ok === true) {
+                                Alert.alert(
+                                    'Distress Call Confirmation',
+                                    'A confirmation of the distress call has been send out to the user in distress.',
+                                    [
+                                        {text: 'OK', onPress: () => {
+                                            console.log('OK pressed for distress confirmation.');
+                                            this.props.navigation.navigate("SignedIn");
+                                        }},
+                                    ],
+                                    {cancelable: false}
+                                );
+                            } else {
+                                Alert.alert(
+                                    'Distress Call Confirmation',
+                                    'Another Naloxone kit holder has already responded to the distress call.',
+                                    [
+                                        {text: 'OK', onPress: () => {
+                                            console.log('OK pressed for distress confirmation.');
+                                            this.props.navigation.navigate("SignedIn");
+                                        }},
+                                    ],
+                                    {cancelable: false}
+                                );
+                            }
+                        });
                     }}
                 />
                 <Button

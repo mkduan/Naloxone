@@ -184,8 +184,9 @@ exports.sendDistressConfirmation = functions.https.onRequest((req, res) => {
 
         //TODO: handle when there is no inDistress status
         var distressStatus = snapshot.val().inDistress;
+        console.log("The distressStatus is: " + distressStatus);
 
-        if(distressStatus !== null) {
+        if(distressStatus !== undefined) {
             distressCallAnswered(userID);
             var notificationData = new Object();
             notificationData.function = "distressConfirmation";
@@ -204,8 +205,9 @@ exports.sendDistressConfirmation = functions.https.onRequest((req, res) => {
                 },
                 body: JSON.stringify(messages)
             });
+            return res.send("success " +  userExpoToken + ", " + userID);
+        } else {
+            return res.redirect(400, "Fail, Distress user has been responded to");
         }
-        //Else find a way for send a callback from this so that it triggers an alert
-        return res.send("success " +  userExpoToken + ", " + userID);
     });
 });
