@@ -21,16 +21,16 @@ export default class HandleNotificationScreen extends Component {
     componentDidMount() {
         getInternalUserInfo("distressDistance")
         .then(distanceRes => {
-            this.setState({distressDistance: distanceRes});
+            this.setState({distressDistance: distanceRes.replace(/"/g, "")});
             getInternalUserInfo("distressUserExpoToken")
             .then(userExpoTokenRes => {
                 this.setState({distressUserExpoToken: userExpoTokenRes});
                 getInternalUserInfo("distressUserID")
                 .then(userIDRes => {
-                    this.setState({distressUserID: userIDRes});
+                    this.setState({distressUserID: userIDRes.replace(/"/g, "")});
                     getInternalUserInfo("distressUserLatlng")
                     .then(latlngRes => {
-                        this.setState({distressUserLatlng: latlngRes, isLoading: false});
+                        this.setState({distressUserLatlng: latlngRes.replace(/"/g, ""), isLoading: false});
                     })
                     .catch(err => console.log("can't find distress latlng in handling notification: " + err));
                 })
@@ -55,16 +55,16 @@ export default class HandleNotificationScreen extends Component {
             <View style={styles.container}>
                 <Text style={styles.paragraph}>
                     Test page for notification handling:{"\n"}
-                    The distress call is {this.state.distressDistance} km away
+                    The distress call is {this.state.distressDistance} km away, Would you like to respond?
                 </Text>
                 <Button
-                    title="Hell Yea"
+                    title="Yes"
                     color="#db2828"
-                    accessibilityLabel="Learn more about this purple button"
+                    accessibilityLabel="Accept the distress call to provide Naloxone"
                     onPress={() => {
                         AsyncStorage.multiRemove(keys);
-                        var userExpoToken = this.state.distressUserExpoToken.replace(/"/g, "");
-                        var userID = this.state.distressUserID.replace(/['"]/g, "");
+                        var userExpoToken = this.state.distressUserExpoToken;
+                        var userID = this.state.distressUserID;
                         fetch('https://us-central1-naloxone-b5562.cloudfunctions.net/sendDistressConfirmation?userExpoToken='+userExpoToken+'&userID='+userID)
                         .then(res => {
                             console.log(res);
@@ -75,7 +75,7 @@ export default class HandleNotificationScreen extends Component {
                                     [
                                         {text: 'OK', onPress: () => {
                                             console.log('OK pressed for distress confirmation.');
-                                            let latlngResult = this.state.distressUserLatlng.replace(/"/g, "");
+                                            let latlngResult = this.state.distressUserLatlng;
                                             latlngResult = latlngResult.split(",");
                                             openGps(latlngResult[0], latlngResult[1]);
                                             this.props.navigation.navigate("SignedIn");
@@ -100,9 +100,9 @@ export default class HandleNotificationScreen extends Component {
                     }}
                 />
                 <Button
-                    title="Maybe Not"
+                    title="No"
                     color="#3BB9FF"
-                    accessibilityLabel="Learn more about this purple button"
+                    accessibilityLabel="Decline the distress call to provide Naloxone"
                     onPress={() => {
                         AsyncStorage.multiRemove(keys)
                         .then(() => {

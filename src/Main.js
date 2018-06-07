@@ -31,20 +31,20 @@ export default class Main extends React.Component {
   }
 
   //TODO: setting state might be throwing warning
-  _handleNotification = (notification) => {
+  _handleNotification = async (notification) => {
     if(notification.data.function === "distressCall") {
-      this.setState({handleNotification: true});
       console.log("notification distance data is: " + JSON.stringify(notification.data.distance));
-      AsyncStorage.setItem("distressDistance", JSON.stringify(notification.data.distance));
+      await AsyncStorage.setItem("distressDistance", JSON.stringify(notification.data.distance));
 
       console.log("notification expoToken data is: " + JSON.stringify(notification.data.userExpoToken));
-      AsyncStorage.setItem("distressUserExpoToken", JSON.stringify(notification.data.userExpoToken));
+      await AsyncStorage.setItem("distressUserExpoToken", JSON.stringify(notification.data.userExpoToken));
 
       console.log("notification userID data is: " + JSON.stringify(notification.data.userID));
-      AsyncStorage.setItem("distressUserID", JSON.stringify(notification.data.userID));
+      await AsyncStorage.setItem("distressUserID", JSON.stringify(notification.data.userID));
 
       console.log("notification latlng data is: " + JSON.stringify(notification.data.userLatlng));
-      AsyncStorage.setItem("distressUserLatlng", JSON.stringify(notification.data.userLatlng));
+      await AsyncStorage.setItem("distressUserLatlng", JSON.stringify(notification.data.userLatlng));
+      this.setState({handleNotification: true});
     }
     //TODO: the user should be able to send a message to say like hey i'm going to the hospital, tis all good.
   }

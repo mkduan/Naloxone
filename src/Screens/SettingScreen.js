@@ -49,7 +49,7 @@ export default class SettingsScreen extends React.Component {
                   if(kitNotiRes !== null) {
                     this.setState({ switchValueNoti: kitNotiRes});
                   }
-                  storeLocation(this.state.switchValue, this.state.switchValueNoti);
+                  storeLocation(kitHolderRes, kitNotiRes);
                   this.setState({
                     screenLoading: false,
                   });
