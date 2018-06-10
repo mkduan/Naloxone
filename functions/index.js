@@ -8,7 +8,6 @@ Number.prototype.toRad = function() {
     return this * Math.PI / 180;
  }
 
-//TODO: have to pass the latlng of the user too i guess
 function HarversineEquation(currentlatlng, userLatlng) {
     var currentLatlngArray = currentlatlng.split(",");
     var userLatlngArray = userLatlng.split(","); 
@@ -114,7 +113,7 @@ function getMessageFromPath(singleLatlngPath, currentlatlng, userExpoToken, user
             notificationData.userLatlng = currentlatlng;
             notificationData.function = "distressCall";
 
-            if(expoToken && expoToken !== userExpoToken) {
+            if(expoToken && expoToken !== userExpoToken && parseFloat(distance) <= 1) {
                 messages.push({
                     "to": expoToken,
                     "title": "Distress Call",
@@ -183,7 +182,6 @@ exports.sendDistressConfirmation = functions.https.onRequest((req, res) => {
 
     return admin.database().ref('/users/'+userID).once('value').then((snapshot) => {
 
-        //TODO: handle when there is no inDistress status
         var distressStatus = snapshot.val().inDistress;
         console.log("The distressStatus is: " + distressStatus);
 

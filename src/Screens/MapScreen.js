@@ -59,7 +59,6 @@ export default class MapScreen extends React.Component {
         });
         let lat = this.state.region.latitude;
         let long = this.state.region.longitude;
-        //TODO: Maybe change the raduis dynamically?
         let url = URLBuild(lat, long, "pharmacy");
         let otherUrl = URLBuild(lat,long, "hospital");
         console.log("pharmacy url: " + url);
@@ -126,7 +125,7 @@ export default class MapScreen extends React.Component {
             coordinate={{
               latitude: marker.geometry.location.lat,
               longitude: marker.geometry.location.lng,
-            }}//TODO:: Callout customize the dialog
+            }}
             key={marker.id}
             title={marker.name}
             description={marker.vicinity}
@@ -152,7 +151,7 @@ export default class MapScreen extends React.Component {
             coordinate={{
               latitude: marker.geometry.location.lat,
               longitude: marker.geometry.location.lng,
-            }}//TODO:: Callout customize the dialog
+            }}
             key={marker.id}
             title={marker.name}
             description={marker.vicinity}
