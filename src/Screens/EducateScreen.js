@@ -20,7 +20,18 @@ const SECTIONS = [
   },
 ];
 
+const naloxoneHowTo = null;
+
 export default class HandleNotificationScreen extends React.Component {
+
+  _toggleVideo(index) {
+    console.log("On change Index value: " + index);
+    //TODO: Pauses when already paused, not a problem but eh
+    if (index !== 2 && naloxoneHowTo !== null) {
+      console.log('Pausing the Video');
+      naloxoneHowTo.setStatusAsync({ shouldPlay: false });
+    }
+  }
 
   _renderSectionTitle(section) {
     return (
@@ -44,9 +55,16 @@ export default class HandleNotificationScreen extends React.Component {
         </View>
       );
     } else {
+      //TODO: if there are more videos then have to sperate ref and video by index
       return (
         <Video
           source={require('../Videos/How-To-Use-Naloxone.mp4')}
+          ref = { component => {
+            //Only need the video reference once when the screen loads up
+            if (component !== null && naloxoneHowTo === null) {
+              naloxoneHowTo = component;
+            }
+          }}
           rate={1.0}
           volume={1.0}
           isMuted={false}
@@ -78,7 +96,8 @@ export default class HandleNotificationScreen extends React.Component {
                 renderSectionTitle={this._renderSectionTitle}
                 renderHeader={this._renderHeader}
                 renderContent={this._renderContent}
-              />
+                onChange = {this._toggleVideo}
+            />
             </ScrollView>
           </View>
       );

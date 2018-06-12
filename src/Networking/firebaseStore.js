@@ -107,7 +107,7 @@ export const storeLocation = (kit, kitnoti) => {
           
           firebase.database().ref('users/'+userID+'/latlngPath').once("value")
           .then(snapshot => {
-            console.log("what the figgity frack path: " + snapshot.val())
+            console.log("Users stored latlngPath: " + snapshot.val())
             myoldLatlngPath = snapshot.val();
             if(myoldLatlngPath !== latlngPath) {
               if (myoldLatlngPath !== null) {
