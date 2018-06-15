@@ -68,10 +68,10 @@ export default class HandleNotificationScreen extends React.Component {
           rate={1.0}
           volume={1.0}
           isMuted={false}
-          resizeMode="cover"
+          resizeMode="contain"
           shouldPlay = {false}
           isLooping = {false}
-          style={{ width: width, height: width }}
+          style={{ width: width, height: width*(width/height)}}
           useNativeControls
         />
       );
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   header: {
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#d6f1fc',
     padding: 10
   },
   headerText: {

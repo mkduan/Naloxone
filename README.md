@@ -12,7 +12,7 @@ Naloxone is a cross platform application made to combat the opioid crisis. The i
 Login Authentication that includes Google, Facebook Authentication, and Email sign up. Google Authentication works, the rest is coming soon!
 
 <p align="center">
-  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/logingoogle.gif">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Login-resize.gif">
 </p>
 
 
@@ -20,19 +20,60 @@ Login Authentication that includes Google, Facebook Authentication, and Email si
 The map in the application shows the user as well as pharmacies and hospitals within a two kilometer radius. When the user taps on a pharmacy or a hospital icon, the location's information will appear above the location. When the user taps on the location's details, a map application on the device will pop up with directions to the pharmacy/hospital from the user's location.
 
 <p align="center">
-  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/openmap.gif">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Pharmacy-Hospital-Map-resize.gif">
 </p>
 
-### Distress Call (in progress) ###
-The discress call section within the app has a slide button that allows the user to send out a distress call to nearby users with Naloxone kits within a two kilometer radius. When a Naloxone kit user recieves a distress call, they can either accept or reject this call. The first user to accept the call will be given the location of the user in distress. This part of the application is under construction.
+### Distress Call ###
+This feature of the application allows the user in distress to send out a distress call to nearby users with Naloxone kits so that Naloxone can be administered as soon as possible. The specifics of this feature is described in the following:
+
+#### 1. Sending Distress Call ####
+The distress call section within the app has a slide button that allows the user to send out a distress call to nearby users with Naloxone kits within a kilometer radius. The reason why a the limit is a kilometer is because it takes around six minutes for a responder to reached the distressed user at average jogging speed while it takes the ambulance an average of eight minutes to respond to a call (With sirens and lights). The notification by the distress call will include the distance it would take to reach the user in distress.
 
 <p align="center">
-  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/distresscall.gif">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Distress-Call-resize.gif">
+</p>
+
+#### 2. Handling the Distress Call ####
+Users of this app have options to specify if they are Naloxone kit holders in the settings. Users that are Naloxone kit holders have the additional option of specifying if they want notifications at that specific time. Only users who declare themselves to be Naloxone kits holders that want notifications will receive notifications and are still logged in the app. Only the first responder of the distress call will be designated as the responder to the distress call. The rest will be notified that someone else is responding to the call.
+
+##### 2-a. Responding to the Distress First #####
+The notification will indicate the distance from the distressed user and the responder. If the responder happens to be the first responder to the distress call then an alert will notify the responder the distressed user will be notified that they are on the way. As well, a map will open with the location of the user in distress with directions to get there.
+
+<p align="center">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Confirm-Distress-Call-resize.gif">
+</p>
+
+##### 2-b. Responding to the Distress Following #####
+The notification will indicate the distance from the distressed user and the responder. If the responder happens not to be the first responder to the distress call then an alert will notify them that they are not needed in this situation and  the user will be directed to the Map page of the Naloxone application.
+
+<p align="center">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Confirm-Distress-Call-Rejection-resize.gif">
+</p>
+
+##### 2-c. Rejecting to the Distress Call #####
+The notification will indicate the distance from the distressed user and the responder. If the responder chooses not to respond to the distress call then the user will be directed to the Map page of the Naloxone application.
+
+<p align="center">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Distress-Rejection-resize.gif">
+</p>
+
+#### 3. Confirmation of the Distress Call ####
+When a user decides to respond to the distress call, a notification will be sent to the user in distress so that they know to stay put while help comes. Plans to give the distress user the option to cancel the distress call, but that's still in progress.
+
+<p align="center">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Distress-User-Confirmation-resize.gif">
+</p>
+
+### Educate ###
+This section of the application helps educate the users about the opioid crisis, laws to protect them, how to use Naloxone and other information to combat the opioid crisis.
+
+<p align="center">
+  <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Educate-resize.gif">
 </p>
 
 ### Settings (in progress) ###
-The settings screen allows the user to delcare if they are Naloxone kit holders or not. If they are Naloxone kit holders, they can specify whether or not they currently want notifications.
+The settings screen allows the user to declare if they are Naloxone kit holders or not. If they are Naloxone kit holders, they can specify whether they currently want notifications. As well, this is where the user can log out of the application and not receive any notification regardless of their preference.
 
 <p align="center">
-  <img height= "480" width= "270" width: "112" src="https://mkduan.github.io/assets/projects/naloxonesrc/settings.gif">
+  <img height= "480" width= "270" width: "112" src="https://mkduan.github.io/assets/projects/naloxonesrc/Settings-resize.gif">
 </p>
