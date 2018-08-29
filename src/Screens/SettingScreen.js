@@ -1,10 +1,7 @@
 import React from 'react';
-import { Text, View, Button, ActivityIndicator, StatusBar } from 'react-native';
+import { View, Button, ActivityIndicator, StatusBar } from 'react-native';
 import styles from '../Style/Style.js';
-import SettingButton from '../Components/SettingButton';
-import SettingHeader from '../Components/SettingHeader.js';
-import SettingLine from '../Components/SettingLine.js';
-import MarkerCallout from '../Components/MarkerCallout.js';
+import {SwitchButton, SettingTitle, CategoryTitle, DividingLine} from 'react-native-minimal-settings';
 
 import {onSignOut, getInternalUserInfoBool, getInternalUserInfo} from '../Auth/fakeAuth.js';
 import {loadPreferences, storeLocation, updateLatlng} from '../Networking/firebaseStore.js';
@@ -72,19 +69,22 @@ export default class SettingsScreen extends React.Component {
           </View>
       );
     }
+//#1f5fa5
 
     return (
       <View style={{ flex: 1}}>
-        <View style = {{ height: 75, backgroundColor: '#1f5fa5', justifyContent: 'flex-end'}}>
-          <Text style= {{left: 20, bottom: 10, color: 'white', fontSize: 30}}>
-            Settings
-          </Text>
-        </View>
-        <SettingHeader
+        <SettingTitle
+          title = {"Settings"}
+          titleBackgroundColor = {'#1f5fa5'}
+          titleColor = {'white'}          
+        />
+        <CategoryTitle
           title = {'General'}
         />
-        <SettingLine/>
-        <SettingButton
+        <DividingLine
+          lineColor = {'rgba(128, 128, 128, 0.5)'}
+        />
+        <SwitchButton
           title = {'Kit Holder'}
           toggleSwitch = {this.kitHolderSwitch}
           switchValue = {this.state.switchValue}
@@ -92,11 +92,11 @@ export default class SettingsScreen extends React.Component {
           blockIcon = {"md-medkit"}
           iconColor = {"#db2828"}
         />
-        <SettingButton
+        <SwitchButton
           title = {'Notifications'}
           toggleSwitch = {this.kitHolderNoti}
           switchValue = {this.state.switchValueNoti}
-          description = {'Reviece notifications when distress calls are issued.'}
+          description = {'Receive notifications when distress calls are issued.'}
           blockIcon = {"md-notifications"}
           iconColor = {"skyblue"}
           isDisabled = {!this.state.switchValue}

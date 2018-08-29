@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Dimensions, Linking } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {Video} from 'expo';
 
@@ -7,16 +7,24 @@ let { width, height } = Dimensions.get('window');
 
 const SECTIONS = [
   {
-    title: 'Save a Life',
-    content: 'Drug overdoses often happen with others around. Staying at the scene is important to help save the life of the person experiencing an overdose.\n\nWitnesses should:\n\n· call for emergency help\n· be prepared by carrying naloxone to use if you suspect an opioid overdose\n· provide first aid, including rescue breathing (CPR), if necessary, until emergency help arrives\n· stay calm and reassure the person that help is on the way\n\nTell others about the new Good Samaritan Drug Overdose Act.'
+    title: 'Signs and Symptons of an Opioid Overdose',
+    content: 'Recongnize the signs and symptons of an overdose, including:\n\n\t·Difficulty\n\t\t·walking\n\t\t·talking\n\t\t·staying awake\n\t·Blue lips or nails\n\t·Very small pupils\n\t·Cold and clammy skin\n\t·Dizziness and confusion\n\t·Extreme drowsiness\n\t·Choking, gurgling or snoring sounds\n\t·Slow, weak or no breathing\n\t·Inability to wake up, even when shaken or shouted at',
+    link: null,
+  },
+  {
+    title: 'What to do: Save a Life',
+    content: 'Drug overdoses often happen with others around. Staying at the scene is important to help save the life of the person experiencing an overdose.\n\nWitnesses should:\n\n\t·call for emergency help\n\t·be prepared by carrying naloxone to use if you suspect an opioid overdose\n\t·provide first aid, including rescue breathing (CPR), if necessary, until emergency help arrives\n\t·stay calm and reassure the person that help is on the way\n\nTell others about the new Good Samaritan Drug Overdose Act.',
+    link: null,
   },
   {
     title: 'Good Samaritan Drug Overdose Act',
-    content: 'The Good Samaritan Drug Overdose Act provides some legal protection for people who experience or witness an overdose and call 9-1-1 for help.\n\nThe act can protect you from:\n\n· Charges for possession of a controlled substance (i.e. drugs) under section 4(1) of the Controlled Drugs and Substances Act\n· Breach of conditions regarding simple possession of controlled substances (i.e. drugs) in:\n\t· pre-trial release\n\t· probation orders\n\t· conditional sentences\n\t· parole \n\nThe Good Samaritan Drug Overdose Act applies to anyone seeking emergency support during an overdose, including the person experiencing an overdose. The act protects the person who seeks help, whether they stay or leave from the overdose scene before help arrives. The act also protects anyone else who is at the scene when help arrives.'
+    content: 'The Good Samaritan Drug Overdose Act provides some legal protection for people who experience or witness an overdose and call 9-1-1 for help.\n\nThe act can protect you from:\n\n\t·harges for possession of a controlled substance (i.e. drugs) under section 4(1) of the Controlled Drugs and Substances Act\n\t·Breach of conditions regarding simple possession of controlled substances (i.e. drugs) in:\n\t\t·pre-trial release\n\t\t·probation orders\n\t\t·conditional sentences\n\t\t·parole \n\nThe Good Samaritan Drug Overdose Act applies to anyone seeking emergency support during an overdose, including the person experiencing an overdose. The act protects the person who seeks help, whether they stay or leave from the overdose scene before help arrives. The act also protects anyone else who is at the scene when help arrives.',
+    link: 'https://www.canada.ca/en/health-canada/services/substance-use/problematic-prescription-drug-use/opioids/about-good-samaritan-drug-overdose-act.html',
   },
   {
     title: 'How to Administer Naloxone',
     content: null,
+    link: null,
   },
 ];
 
@@ -49,13 +57,19 @@ export default class HandleNotificationScreen extends React.Component {
 
   _renderContent(section) {
     if (section.content !== null) {
-      return (
-        <View style={styles.content}>
-          <Text>{section.content}</Text>
-        </View>
-      );
-    } else {
+      <View style={styles.content}>
+        <Text>{section.content}</Text>
+        <Text>
+          To find out more click
+          <Text style={{color: 'blue'}}
+            onPress={() => Linking.openURL(section.link)}>
+             here.
+          </Text>
+        </Text>
+      </View>
+    }  else {
       //TODO: if there are more videos then have to sperate ref and video by index
+      console.log("Video opening...");
       return (
         <Video
           source={require('../Videos/How-To-Use-Naloxone.mp4')}
@@ -105,11 +119,6 @@ export default class HandleNotificationScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#F5FCFF'
-  },
   title: {
     textAlign: 'center',
     fontSize: 22,
@@ -117,13 +126,13 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   header: {
-    backgroundColor: '#d6f1fc',
+    backgroundColor: '#90bcff',
     padding: 10
   },
   headerText: {
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   content: {
     padding: 20,

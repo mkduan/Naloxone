@@ -71,7 +71,7 @@ This section of the application helps educate the users about the opioid crisis,
   <img height= "480" width= "270" src="https://mkduan.github.io/assets/projects/naloxonesrc/Educate-resize.gif">
 </p>
 
-### Settings (in progress) ###
+### Settings ###
 The settings screen allows the user to declare if they are Naloxone kit holders or not. If they are Naloxone kit holders, they can specify whether they currently want notifications. As well, this is where the user can log out of the application and not receive any notification regardless of their preference.
 
 <p align="center">
