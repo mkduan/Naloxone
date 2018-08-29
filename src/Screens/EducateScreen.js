@@ -57,16 +57,26 @@ export default class HandleNotificationScreen extends React.Component {
 
   _renderContent(section) {
     if (section.content !== null) {
-      <View style={styles.content}>
-        <Text>{section.content}</Text>
-        <Text>
-          To find out more click
-          <Text style={{color: 'blue'}}
-            onPress={() => Linking.openURL(section.link)}>
-             here.
-          </Text>
-        </Text>
-      </View>
+      if(section.link !== null){
+        return (
+          <View style={styles.content}>
+            <Text>{section.content}</Text>
+            <Text>
+              {'\nTo find out more click '}
+              <Text style={{color: 'blue'}}
+                onPress={() => Linking.openURL(section.link)}>
+                {'here.'}
+              </Text>
+            </Text>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.content}>
+            <Text>{section.content}</Text>
+          </View>
+        );
+      }
     }  else {
       //TODO: if there are more videos then have to sperate ref and video by index
       console.log("Video opening...");
