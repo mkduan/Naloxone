@@ -1,4 +1,9 @@
-# Naloxone :hospital: #
+<p align="center">
+<img src="src/img/naloxone_banner.png" alt="logo" width="550"/>
+</p>
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f58dc63514b44f39b5ce0f668c435ce)](https://www.codacy.com/app/mkduan/Naloxone?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mkduan/Naloxone&amp;utm_campaign=Badge_Grade)
+
 On April 14, 2016, British Columbia’s Provincial Health Officer, Dr. Perry Kendall, declared the opioid crisis a public health emergency in B.C. In 2016, 931 British Columbians died from overdoses – 216 of these overdose deaths were in Vancouver. Fentanyl was detected in approximately 60% of those deaths (Coroners Service, 2017). The crisis is continuing in 2017: by the end of March there had already been 347 overdose deaths in B.C. As high as these numbers are, there is evidence that overdoses are under-reported. Overdose fatalities are now the leading cause of unnatural deaths in B.C., and are increasing nationally as the spread of opioid analogues moves east from Western Canada.
 ###### Verbatim from [Vancouver Police Department's Review and Recommendations for the Opioid Crisis](https://mkduan.github.io/assets/opioid-crisis.pdf) ######
 
